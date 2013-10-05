@@ -17,8 +17,13 @@ package fr.simon.marquis.secretcodes.ui;
 
 import java.util.ArrayList;
 
-import android.annotation.SuppressLint;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -37,7 +42,29 @@ public class MainActivity extends ActionBarActivity {
 
 	private GridView mGridView;
 
-	@SuppressLint("NewApi")
+	private BroadcastReceiver receiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Bundle bundle = intent.getExtras();
+			if (bundle != null) {
+				String string = bundle.getString(CrawlerService.SECRETCODE_KEY);
+				if (string != null) {
+					try {
+						SecretCode sc = SecretCode.fromJSON(new JSONObject(
+								string));
+						if (mGridView != null) {
+							((SecretCodeAdapter) mGridView.getAdapter())
+									.addItem(sc);
+						}
+					} catch (JSONException e) {
+						// No-op
+					}
+				}
+			}
+		}
+	};
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -82,5 +109,18 @@ public class MainActivity extends ActionBarActivity {
 			break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		registerReceiver(receiver, new IntentFilter(
+				CrawlerService.BROADCAST_INTENT));
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		unregisterReceiver(receiver);
 	}
 }

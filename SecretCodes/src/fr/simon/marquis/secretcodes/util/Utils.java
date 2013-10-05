@@ -88,10 +88,6 @@ public class Utils {
 			blackList = new HashSet<String>();
 		}
 		return blackList.contains(r.loadLabel(pm));
-//		return "DemoFloPackageInstaller".equals(r.loadLabel(pm))
-//				|| "com.htc.demoflopackageinstaller"
-//						.equals(r.activityInfo == null ? null
-//								: r.activityInfo.packageName);
 	}
 
 	@SuppressLint("NewApi")
@@ -115,6 +111,14 @@ public class Utils {
 						.parse("android_secret_code://0")), 0);
 		for (ResolveInfo r : liste) {
 			blackList.add(r.loadLabel(pm).toString());
+		}
+	}
+
+	public static void addSecretCode(Context ctx, SecretCode value) {
+		ArrayList<SecretCode> secretCodes = getSecretCodes(ctx);
+		if (!secretCodes.contains(value)) {
+			secretCodes.add(value);
+			saveSecretCodes(ctx, secretCodes);
 		}
 	}
 }

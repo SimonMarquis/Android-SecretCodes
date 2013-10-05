@@ -30,7 +30,7 @@ import fr.simon.marquis.secretcodes.model.SecretCode;
 import fr.simon.marquis.secretcodes.ui.MainActivity;
 
 public class CrawlerNotification {
-	private static final String NOTIFICATION_TAG = "Crawler";
+	private static final String NOTIFICATION_TAG = "CrawlerNotification";
 
 	public static void notify(final Context context,
 			final ArrayList<SecretCode> secretCodes, final int progress) {

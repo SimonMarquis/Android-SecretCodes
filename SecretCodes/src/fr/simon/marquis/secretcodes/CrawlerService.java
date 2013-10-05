@@ -28,6 +28,9 @@ import fr.simon.marquis.secretcodes.util.Utils;
 
 public class CrawlerService extends Service {
 	public static final String CANCEL_ACTION = "CANCEL_ACTION";
+	public static final String BROADCAST_INTENT = "fr.simon.marquis.secretcodes";
+	public static final String SECRETCODE_KEY = "SECRETCODE_KEY";
+	
 	private FindSecretCodesTask findSecretCodesTask;
 
 	public CrawlerService() {
@@ -150,7 +153,10 @@ public class CrawlerService extends Service {
 		protected void onProgressUpdate(SecretCode... values) {
 			for (SecretCode value : values) {
 				value.toString();
-				//TODO: add items
+				Utils.addSecretCode(getApplicationContext(), value);
+				Intent intent = new Intent(BROADCAST_INTENT);
+				intent.putExtra(SECRETCODE_KEY, value.toJSON().toString());
+				sendBroadcast(intent);
 			}
 			super.onProgressUpdate(values);
 		}
