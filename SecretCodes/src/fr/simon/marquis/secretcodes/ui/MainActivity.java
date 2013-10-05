@@ -30,6 +30,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
@@ -48,18 +49,30 @@ public class MainActivity extends ActionBarActivity {
 		public void onReceive(Context context, Intent intent) {
 			Bundle bundle = intent.getExtras();
 			if (bundle != null) {
-				String string = bundle.getString(CrawlerService.SECRETCODE_KEY);
-				if (string != null) {
-					try {
-						SecretCode sc = SecretCode.fromJSON(new JSONObject(
-								string));
-						if (mGridView != null) {
-							((SecretCodeAdapter) mGridView.getAdapter())
-									.addItem(sc);
+				switch (bundle.getInt(CrawlerService.ACTION)) {
+				case CrawlerService.ACTION_START:
+					setSupportProgressBarIndeterminateVisibility(true);
+					break;
+				case CrawlerService.ACTION_ADD:
+					String obj = bundle.getString(CrawlerService.SECRETCODE_KEY);
+					if (obj != null) {
+						try {
+							SecretCode sc = SecretCode.fromJSON(new JSONObject(
+									obj));
+							if (mGridView != null) {
+								((SecretCodeAdapter) mGridView.getAdapter())
+										.addItem(sc);
+							}
+						} catch (JSONException e) {
+							// No-op
 						}
-					} catch (JSONException e) {
-						// No-op
 					}
+					break;
+				case CrawlerService.ACTION_END:
+					setSupportProgressBarIndeterminateVisibility(false);
+					break;
+				default:
+					break;
 				}
 			}
 		}
@@ -68,7 +81,9 @@ public class MainActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_main);
+		setSupportProgressBarIndeterminateVisibility(CrawlerService.isCrawling);
 		mGridView = (GridView) findViewById(R.id.gridView);
 		mGridView.setAdapter(new SecretCodeAdapter(this, Utils
 				.getSecretCodes(this)));

@@ -27,10 +27,15 @@ import fr.simon.marquis.secretcodes.model.SecretCode;
 import fr.simon.marquis.secretcodes.util.Utils;
 
 public class CrawlerService extends Service {
+	public static boolean isCrawling = false;
 	public static final String CANCEL_ACTION = "CANCEL_ACTION";
 	public static final String BROADCAST_INTENT = "fr.simon.marquis.secretcodes";
 	public static final String SECRETCODE_KEY = "SECRETCODE_KEY";
-	
+	public static final String ACTION = "ACTION";
+	public static final int ACTION_START = 1;
+	public static final int ACTION_ADD = 2;
+	public static final int ACTION_END = 3;
+
 	private FindSecretCodesTask findSecretCodesTask;
 
 	public CrawlerService() {
@@ -40,12 +45,8 @@ public class CrawlerService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.e("", "onStartCommand");
 		if (intent.getBooleanExtra(CANCEL_ACTION, false)) {
-			Log.e("", "cancel FindSecretCodesTask");
-			cancelCrawlTask();
 			stopSelf();
-		} else if (findSecretCodesTask == null
-				|| !findSecretCodesTask.isCancelled()) {
-			Log.e("", "start FindSecretCodesTask");
+		} else if (!isCrawling) {
 			findSecretCodesTask = new FindSecretCodesTask();
 			findSecretCodesTask.execute();
 		}
@@ -60,8 +61,10 @@ public class CrawlerService extends Service {
 
 	@Override
 	public void onDestroy() {
-		Log.e("", "onDestroy");
 		cancelCrawlTask();
+		CrawlerNotification.cancel(getApplicationContext());
+		isCrawling = false;
+		broadcastEnd();
 		super.onDestroy();
 	}
 
@@ -73,6 +76,13 @@ public class CrawlerService extends Service {
 	}
 
 	public class FindSecretCodesTask extends AsyncTask<Void, SecretCode, Void> {
+
+		@Override
+		protected void onPreExecute() {
+			isCrawling = true;
+			broadcastStart();
+			super.onPreExecute();
+		}
 
 		@Override
 		protected Void doInBackground(Void... params) {
@@ -95,11 +105,7 @@ public class CrawlerService extends Service {
 			start = System.currentTimeMillis();
 			StringBuilder sb = new StringBuilder();
 			int[] set = new int[1];
-			while (set.length <= length) {
-				if (isCancelled()) {
-					CrawlerNotification.cancel(getApplicationContext());
-					break;
-				}
+			while (!isCancelled() && set.length <= length) {
 				cur++;
 				SecretCode code = Utils.findSecretCode(
 						generateString(set, characters, sb), pm);
@@ -152,20 +158,37 @@ public class CrawlerService extends Service {
 		@Override
 		protected void onProgressUpdate(SecretCode... values) {
 			for (SecretCode value : values) {
-				value.toString();
 				Utils.addSecretCode(getApplicationContext(), value);
-				Intent intent = new Intent(BROADCAST_INTENT);
-				intent.putExtra(SECRETCODE_KEY, value.toJSON().toString());
-				sendBroadcast(intent);
+				broadcastAdd(value);
 			}
 			super.onProgressUpdate(values);
 		}
 
 		@Override
 		protected void onPostExecute(Void result) {
+			broadcastEnd();
 			CrawlerNotification.cancel(getApplicationContext());
 			stopSelf();
 			super.onPostExecute(result);
 		}
+	}
+
+	private void broadcastStart() {
+		Intent intent = new Intent(BROADCAST_INTENT);
+		intent.putExtra(ACTION, ACTION_START);
+		sendBroadcast(intent);
+	}
+
+	private void broadcastAdd(SecretCode value) {
+		Intent intent = new Intent(BROADCAST_INTENT);
+		intent.putExtra(ACTION, ACTION_ADD);
+		intent.putExtra(SECRETCODE_KEY, value.toJSON().toString());
+		sendBroadcast(intent);
+	}
+
+	private void broadcastEnd() {
+		Intent intent = new Intent(BROADCAST_INTENT);
+		intent.putExtra(ACTION, ACTION_END);
+		sendBroadcast(intent);
 	}
 }
