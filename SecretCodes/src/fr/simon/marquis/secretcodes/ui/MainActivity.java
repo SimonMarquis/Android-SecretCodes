@@ -34,9 +34,9 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
-import fr.simon.marquis.secretcodes.CrawlerService;
 import fr.simon.marquis.secretcodes.R;
 import fr.simon.marquis.secretcodes.model.SecretCode;
+import fr.simon.marquis.secretcodes.service.CrawlerService;
 import fr.simon.marquis.secretcodes.util.Utils;
 
 public class MainActivity extends ActionBarActivity {

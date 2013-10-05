@@ -39,7 +39,7 @@
         </activity>
 
         <service
-            android:name="fr.simon.marquis.secretcodes.CrawlerService"
+            android:name="fr.simon.marquis.secretcodes.service.CrawlerService"
             android:enabled="true"
             android:exported="false" >
         </service>

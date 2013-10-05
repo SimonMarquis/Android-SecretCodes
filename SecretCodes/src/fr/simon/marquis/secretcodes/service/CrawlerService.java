@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package fr.simon.marquis.secretcodes;
+package fr.simon.marquis.secretcodes.service;
 
 import java.util.ArrayList;
 
@@ -24,6 +24,7 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 import fr.simon.marquis.secretcodes.model.SecretCode;
+import fr.simon.marquis.secretcodes.ui.CrawlerNotification;
 import fr.simon.marquis.secretcodes.util.Utils;
 
 public class CrawlerService extends Service {

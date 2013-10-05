@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package fr.simon.marquis.secretcodes;
+package fr.simon.marquis.secretcodes.ui;
 
 import java.util.ArrayList;
 
@@ -26,8 +26,11 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import fr.simon.marquis.secretcodes.R;
+import fr.simon.marquis.secretcodes.R.drawable;
+import fr.simon.marquis.secretcodes.R.string;
 import fr.simon.marquis.secretcodes.model.SecretCode;
-import fr.simon.marquis.secretcodes.ui.MainActivity;
+import fr.simon.marquis.secretcodes.service.CrawlerService;
 
 public class CrawlerNotification {
 	private static final String NOTIFICATION_TAG = "CrawlerNotification";
