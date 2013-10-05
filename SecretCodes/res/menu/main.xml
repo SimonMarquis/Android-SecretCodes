@@ -15,11 +15,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/action_reload"
-        android:icon="@drawable/ic_action_reload"
-        android:showAsAction="always|ifRoom"
-        android:title="@string/action_reload"/>
-    
+        android:id="@+id/action_start"
+        android:showAsAction="always"
+        android:title="START"/>
+
+    <item
+        android:id="@+id/action_stop"
+        android:showAsAction="always"
+        android:title="STOP"/>
+
     <item
         android:id="@+id/action_reset"
         android:showAsAction="always|ifRoom"
