@@ -27,8 +27,6 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import fr.simon.marquis.secretcodes.R;
-import fr.simon.marquis.secretcodes.R.drawable;
-import fr.simon.marquis.secretcodes.R.string;
 import fr.simon.marquis.secretcodes.model.SecretCode;
 import fr.simon.marquis.secretcodes.service.CrawlerService;
 

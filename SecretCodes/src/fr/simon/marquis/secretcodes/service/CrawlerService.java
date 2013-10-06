@@ -159,8 +159,9 @@ public class CrawlerService extends Service {
 		@Override
 		protected void onProgressUpdate(SecretCode... values) {
 			for (SecretCode value : values) {
-				Utils.addSecretCode(getApplicationContext(), value);
-				broadcastAdd(value);
+				if (Utils.addSecretCode(getApplicationContext(), value)) {
+					broadcastAdd(value);
+				}
 			}
 			super.onProgressUpdate(values);
 		}

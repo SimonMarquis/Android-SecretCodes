@@ -15,11 +15,10 @@
  */
 package fr.simon.marquis.secretcodes.ui;
 
-import java.util.ArrayList;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -27,10 +26,14 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Html;
+import android.view.ActionMode;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
@@ -51,10 +54,11 @@ public class MainActivity extends ActionBarActivity {
 			if (bundle != null) {
 				switch (bundle.getInt(CrawlerService.ACTION)) {
 				case CrawlerService.ACTION_START:
-					setSupportProgressBarIndeterminateVisibility(true);
+					supportInvalidateOptionsMenu();
 					break;
 				case CrawlerService.ACTION_ADD:
-					String obj = bundle.getString(CrawlerService.SECRETCODE_KEY);
+					String obj = bundle
+							.getString(CrawlerService.SECRETCODE_KEY);
 					if (obj != null) {
 						try {
 							SecretCode sc = SecretCode.fromJSON(new JSONObject(
@@ -69,7 +73,7 @@ public class MainActivity extends ActionBarActivity {
 					}
 					break;
 				case CrawlerService.ACTION_END:
-					setSupportProgressBarIndeterminateVisibility(false);
+					supportInvalidateOptionsMenu();
 					break;
 				default:
 					break;
@@ -78,13 +82,16 @@ public class MainActivity extends ActionBarActivity {
 		}
 	};
 
+	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		getActionBar().setTitle(
+				Utils.applyCustomTypeFace(getString(R.string.app_name), this));
 		setContentView(R.layout.activity_main);
-		setSupportProgressBarIndeterminateVisibility(CrawlerService.isCrawling);
 		mGridView = (GridView) findViewById(R.id.gridView);
+		mGridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
 		mGridView.setAdapter(new SecretCodeAdapter(this, Utils
 				.getSecretCodes(this)));
 		mGridView.setOnItemClickListener(new OnItemClickListener() {
@@ -99,26 +106,82 @@ public class MainActivity extends ActionBarActivity {
 												.getCode())));
 			}
 		});
+
+		mGridView.setMultiChoiceModeListener(new MultiChoiceModeListener() {
+
+			@Override
+			public void onItemCheckedStateChanged(ActionMode mode,
+					int position, long id, boolean checked) {
+				((SecretCodeAdapter) mGridView.getAdapter())
+						.itemCheckedStateChanged(position, checked);
+				mode.setTitle(Html.fromHtml("<b>"
+						+ mGridView.getCheckedItemCount() + "</b>"));
+			}
+
+			@Override
+			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+				switch (item.getItemId()) {
+				case R.id.action_delete:
+					((SecretCodeAdapter) mGridView.getAdapter())
+							.deleteSelection(getApplicationContext());
+					mode.finish();
+					return true;
+				case R.id.action_select_all:
+					boolean check = mGridView.getCheckedItemCount() != mGridView
+							.getCount();
+					for (int i = 0; i < mGridView.getCount(); i++) {
+						mGridView.setItemChecked(i, check);
+					}
+					return true;
+				default:
+					return false;
+				}
+			}
+
+			@Override
+			public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+				MenuInflater inflater = mode.getMenuInflater();
+				inflater.inflate(R.menu.cab, menu);
+				return true;
+			}
+
+			@Override
+			public void onDestroyActionMode(ActionMode mode) {
+				((SecretCodeAdapter) mGridView.getAdapter()).resetSelection();
+			}
+
+			@Override
+			public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+				return false;
+			}
+
+		});
+
+		supportInvalidateOptionsMenu();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		setSupportProgressBarIndeterminateVisibility(CrawlerService.isCrawling);
+		menu.findItem(R.id.action_scan).setVisible(!CrawlerService.isCrawling);
+		menu.findItem(R.id.action_cancel).setVisible(CrawlerService.isCrawling);
+		return super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.action_start:
+		case R.id.action_scan:
 			startService(new Intent(this, CrawlerService.class));
 			break;
-		case R.id.action_stop:
+		case R.id.action_cancel:
 			stopService(new Intent(this, CrawlerService.class));
-			break;
-		case R.id.action_reset:
-			((SecretCodeAdapter) mGridView.getAdapter()).resetItems();
-			Utils.saveSecretCodes(this, new ArrayList<SecretCode>());
 			break;
 		default:
 			break;
@@ -126,9 +189,12 @@ public class MainActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	@SuppressLint("NewApi")
 	@Override
 	protected void onResume() {
 		super.onResume();
+		((SecretCodeAdapter) mGridView.getAdapter()).setSelection(mGridView
+				.getCheckedItemPositions());
 		registerReceiver(receiver, new IntentFilter(
 				CrawlerService.BROADCAST_INTENT));
 	}
@@ -138,4 +204,5 @@ public class MainActivity extends ActionBarActivity {
 		super.onPause();
 		unregisterReceiver(receiver);
 	}
+
 }

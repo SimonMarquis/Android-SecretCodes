@@ -32,7 +32,12 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.Log;
+
+import com.roboto.RobotoTypefaceManager;
+
 import fr.simon.marquis.secretcodes.model.SecretCode;
 
 public class Utils {
@@ -84,7 +89,7 @@ public class Utils {
 	}
 
 	private static boolean isBlacklisted(ResolveInfo r, PackageManager pm) {
-		if(blackList == null){
+		if (blackList == null) {
 			blackList = new HashSet<String>();
 		}
 		return blackList.contains(r.loadLabel(pm));
@@ -95,14 +100,23 @@ public class Utils {
 		Log.e("", "r.labelRes=[" + r.labelRes + "], r.priority=[" + r.priority
 				+ "], r.resolvePackageName=[" + r.resolvePackageName
 				+ "], r.getIconResource()=[" + r.getIconResource()
-				+ "], r.loadLabel(pm)=[" + r.loadLabel(pm) + "], r.preferredOrder=[" + r.preferredOrder + "], r.priority=[" + r.priority + "], r.specificIndex=[" + r.specificIndex + "], r.isDefault=["
-				+ r.isDefault + "], r.activityInfo.icon=["
-				+ (r.activityInfo == null ? null : r.activityInfo.icon) + "], r.activityInfo.logo=["
-				+ (r.activityInfo == null ? null : r.activityInfo.logo) + "], r.activityInfo.packageName =["
-				+ (r.activityInfo == null ? null : r.activityInfo.packageName) + "], r.serviceInfo.icon=["
-				+ (r.serviceInfo == null ? null : r.serviceInfo.icon) + "], r.serviceInfo.logo=["
-				+ (r.serviceInfo == null ? null : r.serviceInfo.logo) + "], r.serviceInfo.packageName=["
-				+ (r.serviceInfo == null ? null : r.serviceInfo.packageName) + "]");
+				+ "], r.loadLabel(pm)=[" + r.loadLabel(pm)
+				+ "], r.preferredOrder=[" + r.preferredOrder
+				+ "], r.priority=[" + r.priority + "], r.specificIndex=["
+				+ r.specificIndex + "], r.isDefault=[" + r.isDefault
+				+ "], r.activityInfo.icon=["
+				+ (r.activityInfo == null ? null : r.activityInfo.icon)
+				+ "], r.activityInfo.logo=["
+				+ (r.activityInfo == null ? null : r.activityInfo.logo)
+				+ "], r.activityInfo.packageName =["
+				+ (r.activityInfo == null ? null : r.activityInfo.packageName)
+				+ "], r.serviceInfo.icon=["
+				+ (r.serviceInfo == null ? null : r.serviceInfo.icon)
+				+ "], r.serviceInfo.logo=["
+				+ (r.serviceInfo == null ? null : r.serviceInfo.logo)
+				+ "], r.serviceInfo.packageName=["
+				+ (r.serviceInfo == null ? null : r.serviceInfo.packageName)
+				+ "]");
 	}
 
 	public static void checkBlackList(PackageManager pm) {
@@ -114,11 +128,25 @@ public class Utils {
 		}
 	}
 
-	public static void addSecretCode(Context ctx, SecretCode value) {
+	public static boolean addSecretCode(Context ctx, SecretCode value) {
 		ArrayList<SecretCode> secretCodes = getSecretCodes(ctx);
 		if (!secretCodes.contains(value)) {
 			secretCodes.add(value);
 			saveSecretCodes(ctx, secretCodes);
+			return true;
 		}
+		return false;
+	}
+
+	public static SpannableString applyCustomTypeFace(CharSequence src,
+			Context ctx) {
+		SpannableString span = new SpannableString(src);
+
+		span.setSpan(
+				new CustomTypefaceSpan("", RobotoTypefaceManager
+						.obtaintTypeface(ctx,
+								RobotoTypefaceManager.ROBOTOSLAB_REGULAR)), 0,
+				span.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		return span;
 	}
 }

@@ -18,8 +18,11 @@
 
     <string name="app_name">Secret Codes</string>
     <string name="action_reload">Reload</string>
+    <string name="action_select_all">Select all</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_start">Scan secret codes</string>
+    <string name="action_cancel">Cancel</string>
     <string name="crawler_notification_title">Crawling for secret codes</string>
     <string name="crawler_notification_placeholder_text">This operation can take a long time…</string>
-    <string name="action_cancel">Cancel</string>
 
 </resources>
