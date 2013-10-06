@@ -110,4 +110,31 @@ public class SecretCode implements Comparable<SecretCode> {
 				resolveInfo.getIconResource());
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((mCode == null) ? 0 : mCode.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SecretCode other = (SecretCode) obj;
+		if (mCode == null) {
+			if (other.mCode != null)
+				return false;
+		} else if (!mCode.equals(other.mCode))
+			return false;
+		return true;
+	}
+	
+	
+
 }
