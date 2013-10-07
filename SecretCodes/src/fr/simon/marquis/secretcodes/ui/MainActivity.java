@@ -32,6 +32,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.animation.AnimationUtils;
 import android.view.Window;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
@@ -90,10 +92,20 @@ public class MainActivity extends ActionBarActivity {
 		getActionBar().setTitle(
 				Utils.applyCustomTypeFace(getString(R.string.app_name), this));
 		setContentView(R.layout.activity_main);
+		View emptyView = findViewById(R.id.emptyView);
 		mGridView = (GridView) findViewById(R.id.gridView);
 		mGridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
 		mGridView.setAdapter(new SecretCodeAdapter(this, Utils
 				.getSecretCodes(this)));
+		mGridView.setEmptyView(emptyView);
+		emptyView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				v.startAnimation(AnimationUtils.loadAnimation(
+						MainActivity.this, android.R.anim.fade_out));
+				startService(new Intent(MainActivity.this, CrawlerService.class));
+			}
+		});
 		mGridView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
@@ -148,6 +160,7 @@ public class MainActivity extends ActionBarActivity {
 			@Override
 			public void onDestroyActionMode(ActionMode mode) {
 				((SecretCodeAdapter) mGridView.getAdapter()).resetSelection();
+				supportInvalidateOptionsMenu();
 			}
 
 			@Override
@@ -169,7 +182,10 @@ public class MainActivity extends ActionBarActivity {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		setSupportProgressBarIndeterminateVisibility(CrawlerService.isCrawling);
-		menu.findItem(R.id.action_scan).setVisible(!CrawlerService.isCrawling);
+		menu.findItem(R.id.action_scan)
+				.setVisible(
+						!CrawlerService.isCrawling
+								&& !mGridView.getAdapter().isEmpty());
 		menu.findItem(R.id.action_cancel).setVisible(CrawlerService.isCrawling);
 		return super.onPrepareOptionsMenu(menu);
 	}

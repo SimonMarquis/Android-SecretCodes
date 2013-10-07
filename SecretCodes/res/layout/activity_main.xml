@@ -42,25 +42,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:background="@drawable/abc_item_background_holo_light"
         android:gravity="center"
         android:orientation="vertical"
+        android:padding="8dp"
         android:visibility="gone" >
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:src="@drawable/empty_view" />
+            android:layout_marginBottom="20dp"
+            android:alpha="0.3"
+            android:src="@drawable/ic_empty_view" />
 
         <com.roboto.RobotoTextView
             android:id="@+id/emptyViewText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:alpha="0.3"
             android:gravity="center"
-            android:text="empty_preference_file_valid"
+            android:text="@string/action_start"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@android:color/tertiary_text_light"
-            app:typeface="robotoslab_light" />
+            app:typeface="robotoslab_regular" />
     </LinearLayout>
 
     <LinearLayout
