@@ -61,7 +61,8 @@ public class AboutDialog extends DialogFragment {
 
 		return new AlertDialog.Builder(getActivity())
 				.setView(rootView)
-				.setPositiveButton(mExit ? R.string.action_exit : R.string.action_close,
+				.setPositiveButton(
+						mExit ? R.string.action_exit : R.string.action_close,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
 									int whichButton) {

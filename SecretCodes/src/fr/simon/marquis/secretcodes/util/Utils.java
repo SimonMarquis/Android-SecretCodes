@@ -23,7 +23,6 @@ import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -81,7 +80,6 @@ public class Utils {
 						.parse("android_secret_code://" + code)), 0);
 		for (ResolveInfo r : liste) {
 			if (!isBlacklisted(r, pm)) {
-				print(r, pm);
 				return SecretCode.fromResolveInfo(code, r, pm);
 			}
 		}
@@ -95,8 +93,7 @@ public class Utils {
 		return blackList.contains(r.loadLabel(pm));
 	}
 
-	@SuppressLint("NewApi")
-	private static void print(ResolveInfo r, PackageManager pm) {
+	public static void print(ResolveInfo r, PackageManager pm) {
 		Log.e("", "r.labelRes=[" + r.labelRes + "], r.priority=[" + r.priority
 				+ "], r.resolvePackageName=[" + r.resolvePackageName
 				+ "], r.getIconResource()=[" + r.getIconResource()

@@ -17,7 +17,6 @@ package fr.simon.marquis.secretcodes.ui;
 
 import java.util.ArrayList;
 
-import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -67,7 +66,6 @@ public class CrawlerNotification {
 		notify(context, builder.build());
 	}
 
-	@TargetApi(Build.VERSION_CODES.ECLAIR)
 	private static void notify(final Context context,
 			final Notification notification) {
 		notification.flags |= Notification.FLAG_NO_CLEAR;
@@ -84,7 +82,6 @@ public class CrawlerNotification {
 	 * Cancels any notifications of this type previously shown using
 	 * {@link #notify(Context, String, int)}.
 	 */
-	@TargetApi(Build.VERSION_CODES.ECLAIR)
 	public static void cancel(final Context context) {
 		final NotificationManager nm = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);

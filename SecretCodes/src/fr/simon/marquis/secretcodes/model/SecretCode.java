@@ -134,7 +134,5 @@ public class SecretCode implements Comparable<SecretCode> {
 			return false;
 		return true;
 	}
-	
-	
 
 }

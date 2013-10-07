@@ -18,7 +18,6 @@ package fr.simon.marquis.secretcodes.ui;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -38,9 +37,9 @@ import android.view.Window;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.widget.Toast;
 import fr.simon.marquis.secretcodes.R;
 import fr.simon.marquis.secretcodes.model.SecretCode;
 import fr.simon.marquis.secretcodes.service.CrawlerService;
@@ -86,12 +85,11 @@ public class MainActivity extends ActionBarActivity {
 		}
 	};
 
-	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		getActionBar().setTitle(
+		getSupportActionBar().setTitle(
 				Utils.applyCustomTypeFace(getString(R.string.app_name), this));
 		setContentView(R.layout.activity_main);
 		View emptyView = findViewById(R.id.emptyView);
@@ -212,7 +210,6 @@ public class MainActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	@SuppressLint("NewApi")
 	@Override
 	protected void onResume() {
 		super.onResume();

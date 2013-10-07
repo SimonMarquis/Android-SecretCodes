@@ -18,7 +18,7 @@
     android:id="@+id/item_background"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/card_navyborder"
+    android:background="@drawable/card_blueborder"
     android:gravity="center_vertical"
     android:orientation="horizontal" >
 

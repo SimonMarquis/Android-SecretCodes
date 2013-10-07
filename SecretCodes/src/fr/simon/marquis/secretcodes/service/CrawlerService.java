@@ -22,12 +22,15 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.IBinder;
-import android.util.Log;
 import fr.simon.marquis.secretcodes.model.SecretCode;
 import fr.simon.marquis.secretcodes.ui.CrawlerNotification;
 import fr.simon.marquis.secretcodes.util.Utils;
 
 public class CrawlerService extends Service {
+	private final static int CRAWLING_LEVELS = 6;
+	private final static char CHARACTERS[] = { '0', '1', '2', '3', '4', '5',
+			'6', '7', '8', '9' };
+
 	public static boolean isCrawling = false;
 	public static final String CANCEL_ACTION = "CANCEL_ACTION";
 	public static final String BROADCAST_INTENT = "fr.simon.marquis.secretcodes";
@@ -44,7 +47,6 @@ public class CrawlerService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		Log.e("", "onStartCommand");
 		if (intent.getBooleanExtra(CANCEL_ACTION, false)) {
 			stopSelf();
 		} else if (!isCrawling) {
@@ -56,7 +58,6 @@ public class CrawlerService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		// TODO: Return the communication channel to the service.
 		throw new UnsupportedOperationException("Not yet implemented");
 	}
 
@@ -88,28 +89,22 @@ public class CrawlerService extends Service {
 		@Override
 		protected Void doInBackground(Void... params) {
 			ArrayList<SecretCode> secretCodes = new ArrayList<SecretCode>();
-			final int length = 6;
-			char characters[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8',
-					'9' };
 			long max = 0;
-			for (int i = 1; i <= length; i++) {
-				max += Math.pow(characters.length, i);
+			for (int i = 1; i <= CRAWLING_LEVELS; i++) {
+				max += Math.pow(CHARACTERS.length, i);
 			}
 			long cur = 0;
 			int currentProgress = 0;
 			CrawlerNotification.notify(getApplicationContext(), secretCodes,
 					currentProgress);
-
-			long start = System.currentTimeMillis();
 			PackageManager pm = getPackageManager();
 			Utils.checkBlackList(pm);
-			start = System.currentTimeMillis();
 			StringBuilder sb = new StringBuilder();
 			int[] set = new int[1];
-			while (!isCancelled() && set.length <= length) {
+			while (!isCancelled() && set.length <= CRAWLING_LEVELS) {
 				cur++;
 				SecretCode code = Utils.findSecretCode(
-						generateString(set, characters, sb), pm);
+						generateString(set, CHARACTERS, sb), pm);
 				if (code != null) {
 					secretCodes.add(code);
 				}
@@ -123,11 +118,11 @@ public class CrawlerService extends Service {
 					}
 				}
 
-				if (set[set.length - 1] != characters.length - 1) {
+				if (set[set.length - 1] != CHARACTERS.length - 1) {
 					set[set.length - 1]++;
 				} else {
 					for (int i = set.length - 1; i >= 0; i--) {
-						if (set[i] == characters.length - 1) {
+						if (set[i] == CHARACTERS.length - 1) {
 							if (i == 0) {
 								set = new int[set.length + 1];
 								break;
@@ -141,9 +136,6 @@ public class CrawlerService extends Service {
 					}
 				}
 			}
-			Log.e("", "duration = " + (System.currentTimeMillis() - start)
-					+ " nb = " + cur);
-
 			return null;
 		}
 
