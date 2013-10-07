@@ -32,6 +32,8 @@
     <string name="action_close">Close</string>
     <string name="action_exit">Exit</string>
     
+    <string name="execute_code">Invoking *#*#%1$s#*#* secret code…</string>
+    
     <string name="action_reload">Reload</string>
     <string name="action_select_all">Select all</string>
     <string name="action_delete">Delete</string>
