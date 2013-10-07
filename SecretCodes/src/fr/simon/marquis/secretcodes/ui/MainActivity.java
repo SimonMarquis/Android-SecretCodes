@@ -25,6 +25,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.view.ActionMode;
@@ -33,8 +34,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.AnimationUtils;
 import android.view.Window;
+import android.view.animation.AnimationUtils;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -199,6 +200,9 @@ public class MainActivity extends ActionBarActivity {
 		case R.id.action_cancel:
 			stopService(new Intent(this, CrawlerService.class));
 			break;
+		case R.id.show_popop:
+			showPopup(false);
+			break;
 		default:
 			break;
 		}
@@ -221,4 +225,18 @@ public class MainActivity extends ActionBarActivity {
 		unregisterReceiver(receiver);
 	}
 
+	@Override
+	public void onBackPressed() {
+		if (PreferenceManager.getDefaultSharedPreferences(this).contains(
+				"about")) {
+			super.onBackPressed();
+		} else {
+			showPopup(true);
+		}
+	}
+
+	private void showPopup(boolean exit) {
+		AboutDialog newFragment = AboutDialog.newInstance(exit);
+		newFragment.show(getSupportFragmentManager(), "about");
+	}
 }
