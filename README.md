@@ -40,7 +40,7 @@ static private boolean handleSecretCode(Context context, String input) {
 How to execute a secret code?
 -----------------------------
 
-There are two way to execute a secret code:
+There are two ways to execute a secret code:
 ***
 Directly through the dialer application of your Android device.
 
