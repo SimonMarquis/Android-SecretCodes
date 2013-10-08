@@ -36,8 +36,7 @@ public class AboutDialog extends DialogFragment {
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
-				.putBoolean("about", true).commit();
+		PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("about", true).commit();
 		PackageManager pm = getActivity().getPackageManager();
 		String packageName = getActivity().getPackageName();
 		String versionName;
@@ -50,28 +49,21 @@ public class AboutDialog extends DialogFragment {
 
 		LayoutInflater layoutInflater = getActivity().getLayoutInflater();
 		View rootView = layoutInflater.inflate(R.layout.dialog_about, null);
-		TextView nameAndVersionView = (TextView) rootView
-				.findViewById(R.id.app_name_and_version);
-		nameAndVersionView.setText(Html.fromHtml(getString(
-				R.string.app_name_and_version, versionName)));
-		TextView aboutBodyView = (TextView) rootView
-				.findViewById(R.id.about_body);
+		TextView nameAndVersionView = (TextView) rootView.findViewById(R.id.app_name_and_version);
+		nameAndVersionView.setText(Html.fromHtml(getString(R.string.app_name_and_version, versionName)));
+		TextView aboutBodyView = (TextView) rootView.findViewById(R.id.about_body);
 		aboutBodyView.setText(Html.fromHtml(getString(R.string.about_body)));
 		aboutBodyView.setMovementMethod(new LinkMovementMethod());
 
-		return new AlertDialog.Builder(getActivity())
-				.setView(rootView)
-				.setPositiveButton(
-						mExit ? R.string.action_exit : R.string.action_close,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int whichButton) {
-								dialog.dismiss();
-								if (mExit) {
-									getActivity().finish();
-								}
-							}
-						}).create();
+		return new AlertDialog.Builder(getActivity()).setView(rootView)
+				.setPositiveButton(mExit ? R.string.action_exit : R.string.action_close, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						dialog.dismiss();
+						if (mExit) {
+							getActivity().finish();
+						}
+					}
+				}).create();
 	}
 
 }

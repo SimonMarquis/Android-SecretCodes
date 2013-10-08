@@ -60,15 +60,12 @@ public class MainActivity extends ActionBarActivity {
 					supportInvalidateOptionsMenu();
 					break;
 				case CrawlerService.ACTION_ADD:
-					String obj = bundle
-							.getString(CrawlerService.SECRETCODE_KEY);
+					String obj = bundle.getString(CrawlerService.SECRETCODE_KEY);
 					if (obj != null) {
 						try {
-							SecretCode sc = SecretCode.fromJSON(new JSONObject(
-									obj));
+							SecretCode sc = SecretCode.fromJSON(new JSONObject(obj));
 							if (mGridView != null) {
-								((SecretCodeAdapter) mGridView.getAdapter())
-										.addItem(sc);
+								((SecretCodeAdapter) mGridView.getAdapter()).addItem(sc);
 							}
 						} catch (JSONException e) {
 							// No-op
@@ -89,60 +86,46 @@ public class MainActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		getSupportActionBar().setTitle(
-				Utils.applyCustomTypeFace(getString(R.string.app_name), this));
+		getSupportActionBar().setTitle(Utils.applyCustomTypeFace(getString(R.string.app_name), this));
 		setContentView(R.layout.activity_main);
 		View emptyView = findViewById(R.id.emptyView);
 		mGridView = (GridView) findViewById(R.id.gridView);
 		mGridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
-		mGridView.setAdapter(new SecretCodeAdapter(this, Utils
-				.getSecretCodes(this)));
+		mGridView.setAdapter(new SecretCodeAdapter(this, Utils.getSecretCodes(this)));
 		mGridView.setEmptyView(emptyView);
 		emptyView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				v.startAnimation(AnimationUtils.loadAnimation(
-						MainActivity.this, android.R.anim.fade_out));
+				v.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, android.R.anim.fade_out));
 				startService(new Intent(MainActivity.this, CrawlerService.class));
 			}
 		});
 		mGridView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-				String code = ((SecretCode) arg0.getItemAtPosition(arg2))
-						.getCode();
-				Toast.makeText(MainActivity.this,
-						getString(R.string.execute_code, code),
-						Toast.LENGTH_SHORT).show();
-				sendBroadcast(new Intent(
-						"android.provider.Telephony.SECRET_CODE", Uri
-								.parse("android_secret_code://" + code)));
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				String code = ((SecretCode) arg0.getItemAtPosition(arg2)).getCode();
+				Toast.makeText(MainActivity.this, getString(R.string.execute_code, code), Toast.LENGTH_SHORT).show();
+				sendBroadcast(new Intent("android.provider.Telephony.SECRET_CODE", Uri.parse("android_secret_code://" + code)));
 			}
 		});
 
 		mGridView.setMultiChoiceModeListener(new MultiChoiceModeListener() {
 
 			@Override
-			public void onItemCheckedStateChanged(ActionMode mode,
-					int position, long id, boolean checked) {
-				((SecretCodeAdapter) mGridView.getAdapter())
-						.itemCheckedStateChanged(position, checked);
-				mode.setTitle(Html.fromHtml("<b>"
-						+ mGridView.getCheckedItemCount() + "</b>"));
+			public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+				((SecretCodeAdapter) mGridView.getAdapter()).itemCheckedStateChanged(position, checked);
+				mode.setTitle(Html.fromHtml("<b>" + mGridView.getCheckedItemCount() + "</b>"));
 			}
 
 			@Override
 			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 				switch (item.getItemId()) {
 				case R.id.action_delete:
-					((SecretCodeAdapter) mGridView.getAdapter())
-							.deleteSelection(getApplicationContext());
+					((SecretCodeAdapter) mGridView.getAdapter()).deleteSelection(getApplicationContext());
 					mode.finish();
 					return true;
 				case R.id.action_select_all:
-					boolean check = mGridView.getCheckedItemCount() != mGridView
-							.getCount();
+					boolean check = mGridView.getCheckedItemCount() != mGridView.getCount();
 					for (int i = 0; i < mGridView.getCount(); i++) {
 						mGridView.setItemChecked(i, check);
 					}
@@ -184,10 +167,7 @@ public class MainActivity extends ActionBarActivity {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		setSupportProgressBarIndeterminateVisibility(CrawlerService.isCrawling);
-		menu.findItem(R.id.action_scan)
-				.setVisible(
-						!CrawlerService.isCrawling
-								&& !mGridView.getAdapter().isEmpty());
+		menu.findItem(R.id.action_scan).setVisible(!CrawlerService.isCrawling && !mGridView.getAdapter().isEmpty());
 		menu.findItem(R.id.action_cancel).setVisible(CrawlerService.isCrawling);
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -213,10 +193,8 @@ public class MainActivity extends ActionBarActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		((SecretCodeAdapter) mGridView.getAdapter()).setSelection(mGridView
-				.getCheckedItemPositions());
-		registerReceiver(receiver, new IntentFilter(
-				CrawlerService.BROADCAST_INTENT));
+		((SecretCodeAdapter) mGridView.getAdapter()).setSelection(mGridView.getCheckedItemPositions());
+		registerReceiver(receiver, new IntentFilter(CrawlerService.BROADCAST_INTENT));
 		supportInvalidateOptionsMenu();
 	}
 
@@ -228,8 +206,7 @@ public class MainActivity extends ActionBarActivity {
 
 	@Override
 	public void onBackPressed() {
-		if (PreferenceManager.getDefaultSharedPreferences(this).contains(
-				"about")) {
+		if (PreferenceManager.getDefaultSharedPreferences(this).contains("about")) {
 			super.onBackPressed();
 		} else {
 			showPopup(true);

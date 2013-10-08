@@ -81,11 +81,10 @@ public class SecretCode implements Comparable<SecretCode> {
 	public void setPackageManager(String mPackageManager) {
 		this.mPackageManager = mPackageManager;
 	}
-	
+
 	public static SecretCode fromJSON(JSONObject obj) {
 		try {
-			return new SecretCode(obj.getString(KEY_CODE),
-					obj.getString(KEY_LABEL), obj.getString(KEY_PACKAGE_MANAGER), obj.getInt(KEY_RESOURCE));
+			return new SecretCode(obj.getString(KEY_CODE), obj.getString(KEY_LABEL), obj.getString(KEY_PACKAGE_MANAGER), obj.getInt(KEY_RESOURCE));
 		} catch (JSONException e) {
 			return null;
 		} catch (NullPointerException e) {
@@ -116,11 +115,9 @@ public class SecretCode implements Comparable<SecretCode> {
 		return length1 - length2;
 	}
 
-	//TODO
-	public static SecretCode fromResolveInfo(String code,
-			ResolveInfo resolveInfo, PackageManager pm) {
-		return new SecretCode(code, String.valueOf(resolveInfo.loadLabel(pm)), resolveInfo.activityInfo.packageName, 
-				resolveInfo.getIconResource());
+	// TODO
+	public static SecretCode fromResolveInfo(String code, ResolveInfo resolveInfo, PackageManager pm) {
+		return new SecretCode(code, String.valueOf(resolveInfo.loadLabel(pm)), resolveInfo.activityInfo.packageName, resolveInfo.getIconResource());
 	}
 
 	@Override
@@ -147,6 +144,5 @@ public class SecretCode implements Comparable<SecretCode> {
 			return false;
 		return true;
 	}
-
 
 }

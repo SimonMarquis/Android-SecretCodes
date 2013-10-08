@@ -70,15 +70,12 @@ public class SecretCodeAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
 		if (convertView == null) {
-			convertView = layoutInflater.inflate(R.layout.row_code, parent,
-					false);
+			convertView = layoutInflater.inflate(R.layout.row_code, parent, false);
 			holder = new ViewHolder();
 			holder.code = (TextView) convertView.findViewById(R.id.item_code);
 			holder.label = (TextView) convertView.findViewById(R.id.item_label);
-			holder.image = (ImageView) convertView
-					.findViewById(R.id.item_image);
-			holder.selector = (RelativeLayout) convertView
-					.findViewById(R.id.item_selector);
+			holder.image = (ImageView) convertView.findViewById(R.id.item_image);
+			holder.selector = (RelativeLayout) convertView.findViewById(R.id.item_selector);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -88,15 +85,14 @@ public class SecretCodeAdapter extends BaseAdapter {
 		Boolean checked = mCheckedPositions.get(secretCode);
 		holder.code.setText(secretCode.getCode());
 		holder.label.setText(secretCode.getLabel());
-		holder.selector.setBackgroundResource((checked != null && checked
-				.booleanValue()) ? R.drawable.abc_list_pressed_holo_light
+		holder.selector.setBackgroundResource((checked != null && checked.booleanValue()) ? R.drawable.abc_list_pressed_holo_light
 				: R.drawable.abc_list_selector_holo_light);
-		
+
 		boolean hasImg = true;
-		if(secretCode.getDrawable() != null){
+		if (secretCode.getDrawable() != null) {
 			holder.image.setImageDrawable(secretCode.getDrawable());
 		} else {
-			if(secretCode.getDrawableResource() == 0){
+			if (secretCode.getDrawableResource() == 0) {
 				holder.image.setImageResource(R.drawable.ic_action_halt);
 				hasImg = false;
 			} else {
@@ -104,7 +100,7 @@ public class SecretCodeAdapter extends BaseAdapter {
 				holder.image.setImageDrawable(secretCode.getDrawable());
 			}
 		}
-		
+
 		if (PlatformVersion.isAtLeastHoneycomb()) {
 			holder.image.setAlpha(hasImg ? 1f : 0.2f);
 		} else {
@@ -157,8 +153,7 @@ public class SecretCodeAdapter extends BaseAdapter {
 	public void deleteSelection(Context ctx) {
 		ArrayList<SecretCode> temp = new ArrayList<SecretCode>();
 		for (SecretCode secretCode : mValues) {
-			if (!mCheckedPositions.containsKey(secretCode)
-					|| !mCheckedPositions.get(secretCode).booleanValue()) {
+			if (!mCheckedPositions.containsKey(secretCode) || !mCheckedPositions.get(secretCode).booleanValue()) {
 				mCheckedPositions.remove(secretCode);
 				temp.add(secretCode);
 			}
@@ -171,8 +166,7 @@ public class SecretCodeAdapter extends BaseAdapter {
 	public void setSelection(SparseBooleanArray checkedItemPositions) {
 		mCheckedPositions.clear();
 		for (int i = 0; i < checkedItemPositions.size(); i++) {
-			mCheckedPositions.put(mValues.get(checkedItemPositions.keyAt(i)),
-					checkedItemPositions.valueAt(i));
+			mCheckedPositions.put(mValues.get(checkedItemPositions.keyAt(i)), checkedItemPositions.valueAt(i));
 		}
 		super.notifyDataSetChanged();
 	}

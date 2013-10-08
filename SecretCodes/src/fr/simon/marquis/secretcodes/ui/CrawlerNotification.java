@@ -32,19 +32,16 @@ import fr.simon.marquis.secretcodes.service.CrawlerService;
 public class CrawlerNotification {
 	private static final String NOTIFICATION_TAG = "CrawlerNotification";
 
-	public static void notify(final Context context,
-			final ArrayList<SecretCode> secretCodes, final int progress) {
+	public static void notify(final Context context, final ArrayList<SecretCode> secretCodes, final int progress) {
 		final Resources res = context.getResources();
 
 		final String title = res.getString(R.string.crawler_notification_title);
-		final String text = res
-				.getString(R.string.crawler_notification_placeholder_text);
+		final String text = res.getString(R.string.crawler_notification_placeholder_text);
 
 		Intent cancelIntent = new Intent(context, CrawlerService.class);
 		cancelIntent.putExtra(CrawlerService.CANCEL_ACTION, true);
 
-		final NotificationCompat.Builder builder = new NotificationCompat.Builder(
-				context)
+		final NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
 				.setSmallIcon(R.drawable.ic_stat_crawler)
 				.setContentTitle(title)
 				.setContentText(text)
@@ -52,25 +49,16 @@ public class CrawlerNotification {
 				.setProgress(100, progress, progress == 0)
 				.setTicker(title + "\n" + text)
 				.setNumber(secretCodes.size())
-				.setContentIntent(
-						PendingIntent.getActivity(context, 0, new Intent(
-								context, MainActivity.class),
-								PendingIntent.FLAG_UPDATE_CURRENT))
-				.addAction(
-						R.drawable.ic_action_cancel,
-						res.getString(R.string.action_cancel),
-						PendingIntent.getService(context, 0, cancelIntent,
-								PendingIntent.FLAG_CANCEL_CURRENT))
-				.setAutoCancel(false);
+				.setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT))
+				.addAction(R.drawable.ic_action_cancel, res.getString(R.string.action_cancel),
+						PendingIntent.getService(context, 0, cancelIntent, PendingIntent.FLAG_CANCEL_CURRENT)).setAutoCancel(false);
 
 		notify(context, builder.build());
 	}
 
-	private static void notify(final Context context,
-			final Notification notification) {
+	private static void notify(final Context context, final Notification notification) {
 		notification.flags |= Notification.FLAG_NO_CLEAR;
-		final NotificationManager nm = (NotificationManager) context
-				.getSystemService(Context.NOTIFICATION_SERVICE);
+		final NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
 			nm.notify(NOTIFICATION_TAG, 0, notification);
 		} else {
@@ -83,8 +71,7 @@ public class CrawlerNotification {
 	 * {@link #notify(Context, String, int)}.
 	 */
 	public static void cancel(final Context context) {
-		final NotificationManager nm = (NotificationManager) context
-				.getSystemService(Context.NOTIFICATION_SERVICE);
+		final NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
 			nm.cancel(NOTIFICATION_TAG, 0);
 		} else {

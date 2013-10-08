@@ -46,11 +46,9 @@ public class Utils {
 
 	public static ArrayList<SecretCode> getSecretCodes(Context ctx) {
 		ArrayList<SecretCode> res = new ArrayList<SecretCode>();
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(ctx);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 		try {
-			JSONArray array = new JSONArray(prefs.getString(KEY_SECRET_CODES,
-					""));
+			JSONArray array = new JSONArray(prefs.getString(KEY_SECRET_CODES, ""));
 			for (int i = 0; i < array.length(); i++) {
 				SecretCode code = SecretCode.fromJSON(array.optJSONObject(i));
 				if (code != null) {
@@ -63,8 +61,7 @@ public class Utils {
 		}
 	}
 
-	public static void saveSecretCodes(Context ctx,
-			ArrayList<SecretCode> secretCodes) {
+	public static void saveSecretCodes(Context ctx, ArrayList<SecretCode> secretCodes) {
 		Editor ed = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
 		JSONArray array = new JSONArray();
 		for (SecretCode code : secretCodes) {
@@ -76,8 +73,7 @@ public class Utils {
 
 	public static SecretCode findSecretCode(String code, PackageManager pm) {
 		List<ResolveInfo> liste = pm.queryBroadcastReceivers(
-				new Intent("android.provider.Telephony.SECRET_CODE", Uri
-						.parse("android_secret_code://" + code)), 0);
+				new Intent("android.provider.Telephony.SECRET_CODE", Uri.parse("android_secret_code://" + code)), 0);
 		for (ResolveInfo r : liste) {
 			if (!isBlacklisted(r, pm)) {
 				return SecretCode.fromResolveInfo(code, r, pm);
@@ -94,32 +90,20 @@ public class Utils {
 	}
 
 	public static void print(ResolveInfo r, PackageManager pm) {
-		Log.e("", "r.labelRes=[" + r.labelRes + "], r.priority=[" + r.priority
-				+ "], r.resolvePackageName=[" + r.resolvePackageName
-				+ "], r.getIconResource()=[" + r.getIconResource()
-				+ "], r.loadLabel(pm)=[" + r.loadLabel(pm)
-				+ "], r.preferredOrder=[" + r.preferredOrder
-				+ "], r.priority=[" + r.priority + "], r.specificIndex=["
-				+ r.specificIndex + "], r.isDefault=[" + r.isDefault
-				+ "], r.activityInfo.icon=["
-				+ (r.activityInfo == null ? null : r.activityInfo.icon)
-				+ "], r.activityInfo.logo=["
-				+ (r.activityInfo == null ? null : r.activityInfo.logo)
-				+ "], r.activityInfo.packageName =["
-				+ (r.activityInfo == null ? null : r.activityInfo.packageName)
-				+ "], r.serviceInfo.icon=["
-				+ (r.serviceInfo == null ? null : r.serviceInfo.icon)
-				+ "], r.serviceInfo.logo=["
-				+ (r.serviceInfo == null ? null : r.serviceInfo.logo)
-				+ "], r.serviceInfo.packageName=["
-				+ (r.serviceInfo == null ? null : r.serviceInfo.packageName)
-				+ "]");
+		Log.e("", "r.labelRes=[" + r.labelRes + "], r.priority=[" + r.priority + "], r.resolvePackageName=[" + r.resolvePackageName
+				+ "], r.getIconResource()=[" + r.getIconResource() + "], r.loadLabel(pm)=[" + r.loadLabel(pm) + "], r.preferredOrder=["
+				+ r.preferredOrder + "], r.priority=[" + r.priority + "], r.specificIndex=[" + r.specificIndex + "], r.isDefault=[" + r.isDefault
+				+ "], r.activityInfo.icon=[" + (r.activityInfo == null ? null : r.activityInfo.icon) + "], r.activityInfo.logo=["
+				+ (r.activityInfo == null ? null : r.activityInfo.logo) + "], r.activityInfo.packageName =["
+				+ (r.activityInfo == null ? null : r.activityInfo.packageName) + "], r.serviceInfo.icon=["
+				+ (r.serviceInfo == null ? null : r.serviceInfo.icon) + "], r.serviceInfo.logo=["
+				+ (r.serviceInfo == null ? null : r.serviceInfo.logo) + "], r.serviceInfo.packageName=["
+				+ (r.serviceInfo == null ? null : r.serviceInfo.packageName) + "]");
 	}
 
 	public static void checkBlackList(PackageManager pm) {
 		List<ResolveInfo> liste = pm.queryBroadcastReceivers(
-				new Intent("android.provider.Telephony.SECRET_CODE", Uri
-						.parse("android_secret_code://0")), 0);
+				new Intent("android.provider.Telephony.SECRET_CODE", Uri.parse("android_secret_code://0")), 0);
 		for (ResolveInfo r : liste) {
 			blackList.add(r.loadLabel(pm).toString());
 		}
@@ -135,14 +119,10 @@ public class Utils {
 		return false;
 	}
 
-	public static SpannableString applyCustomTypeFace(CharSequence src,
-			Context ctx) {
+	public static SpannableString applyCustomTypeFace(CharSequence src, Context ctx) {
 		SpannableString span = new SpannableString(src);
 
-		span.setSpan(
-				new CustomTypefaceSpan("", RobotoTypefaceManager
-						.obtaintTypeface(ctx,
-								RobotoTypefaceManager.ROBOTOSLAB_REGULAR)), 0,
+		span.setSpan(new CustomTypefaceSpan("", RobotoTypefaceManager.obtaintTypeface(ctx, RobotoTypefaceManager.ROBOTOSLAB_REGULAR)), 0,
 				span.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		return span;
 	}
