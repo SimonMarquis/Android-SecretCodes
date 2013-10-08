@@ -217,6 +217,7 @@ public class MainActivity extends ActionBarActivity {
 				.getCheckedItemPositions());
 		registerReceiver(receiver, new IntentFilter(
 				CrawlerService.BROADCAST_INTENT));
+		supportInvalidateOptionsMenu();
 	}
 
 	@Override
