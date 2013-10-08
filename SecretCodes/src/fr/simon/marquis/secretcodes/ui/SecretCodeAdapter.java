@@ -18,14 +18,10 @@ package fr.simon.marquis.secretcodes.ui;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.net.Uri;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,24 +91,24 @@ public class SecretCodeAdapter extends BaseAdapter {
 		holder.selector.setBackgroundResource((checked != null && checked
 				.booleanValue()) ? R.drawable.abc_list_pressed_holo_light
 				: R.drawable.abc_list_selector_holo_light);
-		List<ResolveInfo> liste = pm
-				.queryBroadcastReceivers(
-						new Intent("android.provider.Telephony.SECRET_CODE",
-								Uri.parse("android_secret_code://"
-										+ secretCode.getCode())), 0);
-
-		boolean hasImg = liste.size() > 1
-				&& liste.get(0).getIconResource() != 0;
+		
+		boolean hasImg = true;
+		if(secretCode.getDrawable() != null){
+			holder.image.setImageDrawable(secretCode.getDrawable());
+		} else {
+			if(secretCode.getDrawableResource() == 0){
+				holder.image.setImageResource(R.drawable.ic_action_halt);
+				hasImg = false;
+			} else {
+				secretCode.setDrawable(pm.getDrawable(secretCode.getPackageManager(), secretCode.getDrawableResource(), null));
+				holder.image.setImageDrawable(secretCode.getDrawable());
+			}
+		}
+		
 		if (PlatformVersion.isAtLeastHoneycomb()) {
 			holder.image.setAlpha(hasImg ? 1f : 0.2f);
 		} else {
 			holder.image.setAlpha(hasImg ? 255 : 50);
-		}
-
-		if (hasImg) {
-			holder.image.setImageDrawable(liste.get(0).loadIcon(pm));
-		} else {
-			holder.image.setImageResource(R.drawable.ic_action_halt);
 		}
 
 		return convertView;

@@ -15,6 +15,6 @@
 -->
 <resources>
 
-    <integer name="numColumns">4</integer>
+    <integer name="numColumns">3</integer>
 
 </resources>
