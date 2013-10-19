@@ -159,7 +159,11 @@ public class CrawlerService extends Service {
 							if (TAG_DATA.equals(xrp.getName())
 									&& ATTR_VAL_ANDROID_SECRET_CODE.equals(xrp.getAttributeValue(NAMESPACE, ATTR_VAL_SCHEME))) {
 								String c = xrp.getAttributeValue(NAMESPACE, ATTR_VAL_HOST);
-								if (!TextUtils.isEmpty(c)/* && TextUtils.isDigitsOnly(c)*/) {
+								if (!TextUtils.isEmpty(c)/*
+														 * &&
+														 * TextUtils.isDigitsOnly
+														 * (c)
+														 */) {
 									SecretCode code = new SecretCode(c, getBestString(p, pm, applicationLabel, activityLabel, intentFilterLabel),
 											p.packageName, getBestIcon(p, pm, applicationIcon, activityIcon, intentFilterIcon));
 									secretCodes.add(code);
@@ -185,8 +189,8 @@ public class CrawlerService extends Service {
 		}
 
 		private String getBestString(PackageInfo p, PackageManager pm, int applicationLabel, int activityLabel, int intentFilterLabel) {
-			return pm.getText(p.packageName, intentFilterLabel == 0 ? (activityLabel == 0 ? applicationLabel : activityLabel) : intentFilterLabel,
-					p.applicationInfo).toString();
+			return String.valueOf(pm.getText(p.packageName, intentFilterLabel == 0 ? (activityLabel == 0 ? applicationLabel : activityLabel)
+					: intentFilterLabel, p.applicationInfo));
 		}
 
 		@Override
