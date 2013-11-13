@@ -34,10 +34,8 @@ import android.preference.PreferenceManager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
-
-import com.roboto.RobotoTypefaceManager;
-
 import fr.simon.marquis.secretcodes.model.SecretCode;
+import fr.simon.marquis.secretcodes.roboto.RobotoTypefaceManager;
 
 public class Utils {
 

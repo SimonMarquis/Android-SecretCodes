@@ -55,7 +55,7 @@
             android:alpha="0.3"
             android:src="@drawable/ic_empty_view" />
 
-        <com.roboto.RobotoTextView
+        <fr.simon.marquis.secretcodes.roboto.RobotoTextView
             android:id="@+id/emptyViewText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

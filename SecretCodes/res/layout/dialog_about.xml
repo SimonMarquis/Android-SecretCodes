@@ -21,7 +21,7 @@
     android:orientation="vertical"
     android:showDividers="middle" >
 
-    <com.roboto.RobotoTextView
+    <fr.simon.marquis.secretcodes.roboto.RobotoTextView
         android:id="@+id/app_name_and_version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
         android:layout_height="0dp"
         android:layout_weight="1" >
 
-        <com.roboto.RobotoTextView
+        <fr.simon.marquis.secretcodes.roboto.RobotoTextView
             android:id="@+id/about_body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
