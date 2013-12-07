@@ -54,6 +54,7 @@ public class CrawlerService extends Service {
 	public static final String ATTR_VAL_ANDROID_SECRET_CODE = "android_secret_code";
 	public static final String TAG_APPLICATION = "application";
 	public static final String TAG_ACTIVITY = "activity";
+	public static final String TAG_ACTIVITY_ALIAS = "activity-alias";
 	public static final String TAG_INTENT_FILTER = "intent-filter";
 	public static final String TAG_DATA = "data";
 
@@ -142,11 +143,20 @@ public class CrawlerService extends Service {
 						}
 
 						if (xrp.getEventType() == XmlPullParser.START_TAG) {
+
+							// application
+							// |
+							// |--- activity or activity-alias
+							// |    |
+							// |    |--- intent filter
+							// |    |    |
+							// |    |    |--- data
+
 							if (TAG_APPLICATION.equals(xrp.getName())) {
 								applicationLabel = xrp.getAttributeResourceValue(NAMESPACE, ATTR_VAL_LABEL, 0);
 								applicationIcon = xrp.getAttributeResourceValue(NAMESPACE, ATTR_VAL_ICON, 0);
 							}
-							if (TAG_ACTIVITY.equals(xrp.getName())) {
+							if (TAG_ACTIVITY.equals(xrp.getName()) || TAG_ACTIVITY_ALIAS.equals(xrp.getName())) {
 								activityLabel = xrp.getAttributeResourceValue(NAMESPACE, ATTR_VAL_LABEL, 0);
 								activityIcon = xrp.getAttributeResourceValue(NAMESPACE, ATTR_VAL_ICON, 0);
 							}
@@ -157,11 +167,7 @@ public class CrawlerService extends Service {
 							if (TAG_DATA.equals(xrp.getName())
 									&& ATTR_VAL_ANDROID_SECRET_CODE.equals(xrp.getAttributeValue(NAMESPACE, ATTR_VAL_SCHEME))) {
 								String c = xrp.getAttributeValue(NAMESPACE, ATTR_VAL_HOST);
-								if (!TextUtils.isEmpty(c)/*
-														 * &&
-														 * TextUtils.isDigitsOnly
-														 * (c)
-														 */) {
+								if (!TextUtils.isEmpty(c)) {
 									SecretCode code = new SecretCode(c, getBestString(p, pm, applicationLabel, activityLabel, intentFilterLabel),
 											p.packageName, getBestIcon(p, pm, applicationIcon, activityIcon, intentFilterIcon));
 									secretCodes.add(code);
