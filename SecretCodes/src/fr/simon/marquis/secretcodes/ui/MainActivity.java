@@ -15,6 +15,8 @@
  */
 package fr.simon.marquis.secretcodes.ui;
 
+import java.util.ArrayList;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,6 +42,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.Toast;
+import fr.simon.marquis.secretcodes.ExportContentProvider;
 import fr.simon.marquis.secretcodes.R;
 import fr.simon.marquis.secretcodes.model.SecretCode;
 import fr.simon.marquis.secretcodes.service.CrawlerService;
@@ -184,10 +187,30 @@ public class MainActivity extends ActionBarActivity {
 		case R.id.show_popop:
 			showPopup(false);
 			break;
+		case R.id.action_export:
+			exportSecretCodes();
+			break;
 		default:
 			break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void exportSecretCodes() {
+		ArrayList<SecretCode> secretCodes = Utils.getSecretCodes(this);
+		if (secretCodes.isEmpty()) {
+			Toast.makeText(MainActivity.this, getString(R.string.no_secret_code), Toast.LENGTH_SHORT).show();
+			return;
+		}
+		sendEmail();
+	}
+
+	private void sendEmail() {
+		Intent i = new Intent(Intent.ACTION_SEND);
+		i.setType("text/plain");
+		i.putExtra(Intent.EXTRA_EMAIL, "");
+		i.putExtra(Intent.EXTRA_STREAM, ExportContentProvider.CONTENT_URI);
+		startActivity(Intent.createChooser(i, null));
 	}
 
 	@Override

@@ -41,5 +41,7 @@
     <string name="action_cancel">Cancel</string>
     <string name="crawler_notification_title">Crawling for secret codes</string>
     <string name="crawler_notification_placeholder_text">This operation can take a long time…</string>
+    <string name="action_contribute">Contribute</string>
+    <string name="no_secret_code">There is no secret code to export…</string>
 
 </resources>

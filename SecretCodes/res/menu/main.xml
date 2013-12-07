@@ -27,6 +27,10 @@
         android:title="@string/action_cancel"
         app:showAsAction="ifRoom"/>
     <item
+        android:id="@+id/action_export"
+        android:title="@string/action_contribute"
+        app:showAsAction="never"/>
+    <item
         android:id="@+id/show_popop"
         android:title="@string/show_popup"
         app:showAsAction="never"/>

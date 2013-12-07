@@ -108,13 +108,11 @@ public class Utils {
 	}
 
 	public static boolean addSecretCode(Context ctx, SecretCode value) {
-		ArrayList<SecretCode> secretCodes = getSecretCodes(ctx);
-		if (!secretCodes.contains(value)) {
-			secretCodes.add(value);
-			saveSecretCodes(ctx, secretCodes);
-			return true;
-		}
-		return false;
+		HashSet<SecretCode> secretCodes = new HashSet<SecretCode>(getSecretCodes(ctx));
+		boolean exist = secretCodes.contains(value);
+		secretCodes.add(value);
+		saveSecretCodes(ctx, new ArrayList<SecretCode>(secretCodes));
+		return !exist;
 	}
 
 	public static SpannableString applyCustomTypeFace(CharSequence src, Context ctx) {
