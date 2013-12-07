@@ -24,10 +24,10 @@ import android.graphics.drawable.Drawable;
 
 public class SecretCode implements Comparable<SecretCode> {
 
-	private static final String KEY_CODE = "CODE";
-	private static final String KEY_LABEL = "LABEL";
-	private static final String KEY_RESOURCE = "RESOURCE";
-	private static final String KEY_PACKAGE_MANAGER = "PM";
+	private static final String KEY_CODE = "C";
+	private static final String KEY_LABEL = "L";
+	private static final String KEY_RESOURCE = "R";
+	private static final String KEY_PACKAGE_MANAGER = "P";
 
 	private String mCode;
 	private String mLabel;
