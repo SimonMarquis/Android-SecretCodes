@@ -23,11 +23,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -37,6 +39,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import fr.simon.marquis.secretcodes.model.SecretCode;
@@ -48,6 +51,12 @@ public class ExportContentProvider extends ContentProvider {
 	private static final int BUFFER = 2048;
 
 	public static final Uri CONTENT_URI = Uri.parse("content://fr.simon.marquis.secretcodes.data/" + ZIP_FILE_NAME);
+	private static final String DEVICE_MANUFACTURER = "DEVICE_MANUFACTURER";
+	private static final String DEVICE_MODEL = "DEVICE_MODEL";
+	private static final String DEVICE_CODE_NAME = "DEVICE_CODE_NAME";
+	private static final String DEVICE_LOCALE = "DEVICE_LOCALE";
+	private static final String ANDROID_VERSION = "ANDROID_VERSION";
+	private static final String SECRET_CODES = "SECRET_CODES";
 
 	public ExportContentProvider() {
 	}
@@ -136,8 +145,6 @@ public class ExportContentProvider extends ContentProvider {
 	private void saveImageFiles(ArrayList<SecretCode> secretCodes) {
 		for (SecretCode secretCode : secretCodes) {
 			try {
-				// Bitmap bm = BitmapFactory.decodeResource(getResources(),
-				// secretCode.getDrawableResource());
 				if (secretCode.getDrawableResource() == 0) {
 					continue;
 				}
@@ -170,14 +177,23 @@ public class ExportContentProvider extends ContentProvider {
 	}
 
 	private void saveJsonFile(ArrayList<SecretCode> secretCodes) {
-		JSONArray json = new JSONArray();
-		for (SecretCode secretCode : secretCodes) {
-			json.put(secretCode.toJSON());
-		}
-
 		try {
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put(DEVICE_MANUFACTURER, Build.MANUFACTURER);
+			jsonObject.put(DEVICE_MODEL, Build.MODEL);
+			jsonObject.put(DEVICE_CODE_NAME, Build.DEVICE);
+			jsonObject.put(DEVICE_LOCALE, Locale.getDefault().getDisplayName());
+			jsonObject.put(ANDROID_VERSION, String.valueOf(Build.VERSION.RELEASE));
+
+			JSONArray jsonArray = new JSONArray();
+			for (SecretCode secretCode : secretCodes) {
+				jsonArray.put(secretCode.toJSON());
+			}
+
+			jsonObject.put(SECRET_CODES, jsonArray);
+
 			FileOutputStream openFileOutput = getContext().openFileOutput(JSON_FILE_NAME, Context.MODE_PRIVATE);
-			openFileOutput.write(json.toString(4).getBytes());
+			openFileOutput.write(jsonObject.toString(4).getBytes());
 			openFileOutput.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
