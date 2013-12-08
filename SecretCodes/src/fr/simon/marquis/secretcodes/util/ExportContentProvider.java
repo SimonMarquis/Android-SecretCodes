@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package fr.simon.marquis.secretcodes;
+package fr.simon.marquis.secretcodes.util;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -40,7 +40,6 @@ import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import fr.simon.marquis.secretcodes.model.SecretCode;
-import fr.simon.marquis.secretcodes.util.Utils;
 
 public class ExportContentProvider extends ContentProvider {
 

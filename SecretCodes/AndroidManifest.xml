@@ -47,7 +47,7 @@
         </service>
 
         <provider
-            android:name="fr.simon.marquis.secretcodes.ExportContentProvider"
+            android:name="fr.simon.marquis.secretcodes.util.ExportContentProvider"
             android:authorities="fr.simon.marquis.secretcodes.data"
             android:enabled="true"
             android:exported="true" >

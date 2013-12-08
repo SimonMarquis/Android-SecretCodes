@@ -42,10 +42,10 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.Toast;
-import fr.simon.marquis.secretcodes.ExportContentProvider;
 import fr.simon.marquis.secretcodes.R;
 import fr.simon.marquis.secretcodes.model.SecretCode;
 import fr.simon.marquis.secretcodes.service.CrawlerService;
+import fr.simon.marquis.secretcodes.util.ExportContentProvider;
 import fr.simon.marquis.secretcodes.util.Utils;
 
 public class MainActivity extends ActionBarActivity {
