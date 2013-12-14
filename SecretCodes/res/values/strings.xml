@@ -27,6 +27,8 @@
         <b>&bull;&nbsp;&nbsp;<a href="https://github.com/SimonMarquis/Android-SecretCodes">Github repository</a></b> <i>Source code of the project</i><br>
         <b>&bull;&nbsp;&nbsp;<a href="http://www.simon-marquis.fr">My personal website</a></b> <i>About me, and other projects</i>
     ]]></string>
+    <string name="online_database_url" translatable="false">https://github.com/SimonMarquis/Android-SecretCodes/blob/master/Database/SecretCodes.md</string>
+    <string name="extra_email" translatable="false">sim.dev.android@gmail.com</string>
     
     <string name="show_popup">About</string>
     <string name="action_close">Close</string>
@@ -41,7 +43,11 @@
     <string name="action_cancel">Cancel</string>
     <string name="crawler_notification_title">Crawling for secret codes</string>
     <string name="crawler_notification_placeholder_text">This operation can take a long time…</string>
+    <string name="action_online_database">Online Database</string>
     <string name="action_contribute">Contribute</string>
-    <string name="no_secret_code">There is no secret code to export…</string>
+    <string name="no_secret_code">There is no secret code…</string>
+    <string name="extra_subject">Android Secret Codes contribution</string>
+    <string name="extra_text">"Thanks for contributing to the Secret Codes database.\nPlease provide a short description for each secret code.\n\n"</string>
+    <string name="extra_text_end">"\nThanks ☺"</string>
 
 </resources>

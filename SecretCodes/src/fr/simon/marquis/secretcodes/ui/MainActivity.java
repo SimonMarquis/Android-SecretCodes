@@ -16,6 +16,8 @@
 package fr.simon.marquis.secretcodes.ui;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Locale;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,6 +27,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
@@ -187,7 +190,10 @@ public class MainActivity extends ActionBarActivity {
 		case R.id.show_popop:
 			showPopup(false);
 			break;
-		case R.id.action_export:
+		case R.id.action_online_database:
+			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.online_database_url))));
+			break;
+		case R.id.action_contribute:
 			exportSecretCodes();
 			break;
 		default:
@@ -198,19 +204,37 @@ public class MainActivity extends ActionBarActivity {
 
 	private void exportSecretCodes() {
 		ArrayList<SecretCode> secretCodes = Utils.getSecretCodes(this);
+		Collections.sort(secretCodes);
 		if (secretCodes.isEmpty()) {
 			Toast.makeText(MainActivity.this, getString(R.string.no_secret_code), Toast.LENGTH_SHORT).show();
 			return;
 		}
-		sendEmail();
+		sendEmail(secretCodes);
 	}
 
-	private void sendEmail() {
+	private void sendEmail(ArrayList<SecretCode> secretCodes) {
 		Intent i = new Intent(Intent.ACTION_SEND);
-		i.setType("text/plain");
-		i.putExtra(Intent.EXTRA_EMAIL, "");
+		i.setType("message/rfc822");
+		i.putExtra(Intent.EXTRA_EMAIL, new String[] { getString(R.string.extra_email) });
+		i.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.extra_subject));
+		i.putExtra(Intent.EXTRA_TEXT, generateEmailBody(secretCodes));
 		i.putExtra(Intent.EXTRA_STREAM, ExportContentProvider.CONTENT_URI);
 		startActivity(Intent.createChooser(i, null));
+	}
+
+	private String generateEmailBody(ArrayList<SecretCode> secretCodes) {
+		StringBuilder sb = new StringBuilder(getString(R.string.extra_text))
+		.append("DEVICE_MANUFACTURER • ").append(Build.MANUFACTURER)
+		.append("\nDEVICE_MODEL • ").append(Build.MODEL)
+		.append("\nDEVICE_CODE_NAME • ").append(Build.DEVICE)
+		.append("\nDEVICE_LOCALE • ").append(Locale.getDefault().getDisplayName())
+		.append("\nANDROID_VERSION • ").append(Build.VERSION.RELEASE)
+		.append("\n\n");
+
+		for (SecretCode secretCode : secretCodes) {
+			sb.append(secretCode.getCode()).append(" • ").append(secretCode.getLabel()).append("\n↪  \n\n");
+		}
+		return sb.append(getString(R.string.extra_text_end)).toString();
 	}
 
 	@Override

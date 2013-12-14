@@ -37,5 +37,11 @@
     <string name="action_cancel">Annuler</string>
     <string name="crawler_notification_title">Recherche des codes secrets</string>
     <string name="crawler_notification_placeholder_text">Cette opération peut prendre un certain temps…</string>
+    <string name="action_online_database">Base de données</string>
+    <string name="action_contribute">Contribuer</string>
+    <string name="no_secret_code">"Il n'y a aucun code secret…"</string>
+    <string name="extra_subject">Android Secret Codes contribution</string>
+    <string name="extra_text">"Merci de contribuer à la base de données de codes secrets.\nDonnez une petite description pour chaque code secret.\n\n"</string>
+    <string name="extra_text_end">"\nMerci ☺"</string>
 
 </resources>
