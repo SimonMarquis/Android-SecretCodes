@@ -1,4 +1,4 @@
-Secret codes|Icon|Title|Description|Devices
+Code|Icon|Title|Description|Devices
 :---:|:---:|---|---|---
 **46**|![](https://raw.github.com/SimonMarquis/Android-SecretCodes/master/Database/Icons/46.png "")|Google Services Framework||`HTC One``Nexus 10`|
 **225**|![](https://raw.github.com/SimonMarquis/Android-SecretCodes/master/Database/Icons/225.png "")|Calendar info||`Nexus 10` |
