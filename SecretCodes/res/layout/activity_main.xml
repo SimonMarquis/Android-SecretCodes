@@ -34,8 +34,7 @@
         android:overScrollMode="never"
         android:requiresFadingEdge="vertical"
         android:scrollbars="none"
-        android:verticalSpacing="10dp"
-        android:animateLayoutChanges="true" >
+        android:verticalSpacing="10dp" >
     </GridView>
 
     <LinearLayout

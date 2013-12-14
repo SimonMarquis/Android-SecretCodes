@@ -41,6 +41,7 @@ public class SecretCodeAdapter extends BaseAdapter {
 	private ArrayList<SecretCode> mValues;
 	private PackageManager pm;
 	private Map<SecretCode, Boolean> mCheckedPositions;
+	private int [] mBackgrounds = {R.drawable.card_blueborder, R.drawable.card_goldborder, R.drawable.card_greenborder, R.drawable.card_navyborder, R.drawable.card_purpleborder, R.drawable.card_redborder, R.drawable.card_tealborder, R.drawable.card_yellowborder};
 
 	public SecretCodeAdapter(Context ctx, ArrayList<SecretCode> values) {
 		this.layoutInflater = LayoutInflater.from(ctx);
@@ -76,12 +77,14 @@ public class SecretCodeAdapter extends BaseAdapter {
 			holder.label = (TextView) convertView.findViewById(R.id.item_label);
 			holder.image = (ImageView) convertView.findViewById(R.id.item_image);
 			holder.selector = (RelativeLayout) convertView.findViewById(R.id.item_selector);
+			holder.background = (View) convertView.findViewById(R.id.item_background);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
 		SecretCode secretCode = mValues.get(position);
+		holder.background.setBackgroundResource(mBackgrounds[Math.abs(secretCode.getLabel().hashCode()%8)]);
 		Boolean checked = mCheckedPositions.get(secretCode);
 		holder.code.setText(secretCode.getCode());
 		holder.label.setText(secretCode.getLabel());
@@ -115,6 +118,7 @@ public class SecretCodeAdapter extends BaseAdapter {
 		private TextView label;
 		private ImageView image;
 		private RelativeLayout selector;
+		private View background;
 	}
 
 	public void addItem(SecretCode value) {
