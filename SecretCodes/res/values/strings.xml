@@ -53,4 +53,6 @@
     <string name="zero_secret_codes">There is no secret code on your device…</string>
     <string name="one_secret_codes">One secret code found</string>
     <string name="many_secret_codes">%d secret codes found</string>
+    
+    <string name="security_exception">Your device isn\'t compatible…\nTry to execute the code directly from the dialer app.</string>
 </resources>

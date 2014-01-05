@@ -131,7 +131,11 @@ public class MainActivity extends ActionBarActivity {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				String code = ((SecretCode) arg0.getItemAtPosition(arg2)).getCode();
 				Toast.makeText(MainActivity.this, getString(R.string.execute_code, code), Toast.LENGTH_SHORT).show();
-				sendBroadcast(new Intent("android.provider.Telephony.SECRET_CODE", Uri.parse("android_secret_code://" + code)));
+				try {
+					sendBroadcast(new Intent("android.provider.Telephony.SECRET_CODE", Uri.parse("android_secret_code://" + code)));
+				} catch (java.lang.SecurityException se) {
+					Toast.makeText(MainActivity.this, R.string.security_exception, Toast.LENGTH_LONG).show();
+				}
 			}
 		});
 

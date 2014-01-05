@@ -47,4 +47,6 @@
     <string name="zero_secret_codes">Aucun code secret n\'a été trouvé…</string>
     <string name="one_secret_codes">Un code secret trouvé</string>
     <string name="many_secret_codes">%d codes secrets trouvés</string>
+    
+    <string name="security_exception">Votre appareil n\'est pas compatible…\nComposez le code depuis l\'application téléphone.</string>
 </resources>
