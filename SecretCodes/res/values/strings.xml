@@ -49,5 +49,8 @@
     <string name="extra_subject">Android Secret Codes contribution</string>
     <string name="extra_text">"Thanks for contributing to the Secret Codes database.\nPlease provide a short description for each secret code.\n\n"</string>
     <string name="extra_text_end">"\nThanks ☺"</string>
-
+    
+    <string name="zero_secret_codes">There is no secret code on your device…</string>
+    <string name="one_secret_codes">One secret code found</string>
+    <string name="many_secret_codes">%d secret codes found</string>
 </resources>

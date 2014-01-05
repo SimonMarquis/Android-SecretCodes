@@ -17,7 +17,9 @@ package fr.simon.marquis.secretcodes.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -31,6 +33,7 @@ import android.content.res.XmlResourceParser;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.text.TextUtils;
+import android.util.Log;
 import fr.simon.marquis.secretcodes.model.SecretCode;
 import fr.simon.marquis.secretcodes.ui.CrawlerNotification;
 import fr.simon.marquis.secretcodes.util.Utils;
@@ -42,6 +45,8 @@ public class CrawlerService extends Service {
 	public static final String BROADCAST_INTENT = "fr.simon.marquis.secretcodes";
 	public static final String SECRETCODE_KEY = "SECRETCODE_KEY";
 	public static final String ACTION = "ACTION";
+	public static final String SECRET_CODE_NB = "SECRET_CODE_NB";
+	public static final int SECRET_CODE_NB_INVALID = -1;
 	public static final int ACTION_START = 1;
 	public static final int ACTION_ADD = 2;
 	public static final int ACTION_END = 3;
@@ -87,7 +92,7 @@ public class CrawlerService extends Service {
 		cancelCrawlTask();
 		CrawlerNotification.cancel(getApplicationContext());
 		isCrawling = false;
-		broadcastEnd();
+		broadcastEnd(null);
 		super.onDestroy();
 	}
 
@@ -98,7 +103,7 @@ public class CrawlerService extends Service {
 		}
 	}
 
-	public class FindSecretCodesTask extends AsyncTask<Void, SecretCode, Void> {
+	public class FindSecretCodesTask extends AsyncTask<Void, SecretCode, ArrayList<SecretCode>> {
 
 		@Override
 		protected void onPreExecute() {
@@ -108,13 +113,9 @@ public class CrawlerService extends Service {
 		}
 
 		@Override
-		protected Void doInBackground(Void... params) {
-			try {
-				Thread.sleep(getResources().getInteger(android.R.integer.config_longAnimTime));
-			} catch (InterruptedException e1) {
-				// NO-OP
-			}
+		protected ArrayList<SecretCode> doInBackground(Void... params) {
 			PackageManager pm = getPackageManager();
+			Set<String> codes = new HashSet<String>();
 			ArrayList<SecretCode> secretCodes = new ArrayList<SecretCode>();
 			List<android.content.pm.PackageInfo> pil = pm.getInstalledPackages(PackageManager.GET_DISABLED_COMPONENTS);
 			long max = pil == null ? 0 : pil.size();
@@ -122,6 +123,12 @@ public class CrawlerService extends Service {
 			int currentProgress = 0;
 			CrawlerNotification.notify(getApplicationContext(), secretCodes, currentProgress);
 
+			try {
+				Thread.sleep(getResources().getInteger(android.R.integer.config_longAnimTime)*5);
+			} catch (InterruptedException e1) {
+				// NO-OP
+			}
+			
 			for (PackageInfo p : pil) {
 				if (isCancelled()) {
 					return null;
@@ -172,7 +179,8 @@ public class CrawlerService extends Service {
 							if (TAG_DATA.equals(xrp.getName())
 									&& ATTR_VAL_ANDROID_SECRET_CODE.equals(xrp.getAttributeValue(NAMESPACE, ATTR_VAL_SCHEME))) {
 								String c = xrp.getAttributeValue(NAMESPACE, ATTR_VAL_HOST);
-								if (!TextUtils.isEmpty(c)) {
+								if (!TextUtils.isEmpty(c) && !codes.contains(c)) {
+									codes.add(c);
 									SecretCode code = new SecretCode(c, getBestString(p, pm, applicationLabel, activityLabel, intentFilterLabel),
 											p.packageName, getBestIcon(p, pm, applicationIcon, activityIcon, intentFilterIcon));
 									secretCodes.add(code);
@@ -190,7 +198,7 @@ public class CrawlerService extends Service {
 					e.printStackTrace();
 				}
 			}
-			return null;
+			return secretCodes;
 		}
 
 		private int getBestIcon(PackageInfo p, PackageManager pm, int applicationIcon, int activityIcon, int intentFilterIcon) {
@@ -205,6 +213,7 @@ public class CrawlerService extends Service {
 		@Override
 		protected void onProgressUpdate(SecretCode... values) {
 			for (SecretCode value : values) {
+				Log.i(CrawlerService.class.getSimpleName(),"Secret code found : " + value.toJSON().toString());
 				if (Utils.addSecretCode(getApplicationContext(), value)) {
 					broadcastAdd(value);
 				}
@@ -213,11 +222,17 @@ public class CrawlerService extends Service {
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
-			broadcastEnd();
+		protected void onPostExecute(ArrayList<SecretCode> result) {
+			broadcastEnd(result);
 			CrawlerNotification.cancel(getApplicationContext());
 			stopSelf();
 			super.onPostExecute(result);
+		}
+		
+		@Override
+		protected void onCancelled(ArrayList<SecretCode> result) {
+			super.onCancelled(result);
+			CrawlerNotification.cancel(getApplicationContext());
 		}
 	}
 
@@ -234,9 +249,10 @@ public class CrawlerService extends Service {
 		sendBroadcast(intent);
 	}
 
-	private void broadcastEnd() {
+	private void broadcastEnd(ArrayList<SecretCode> secretCodes) {
 		Intent intent = new Intent(BROADCAST_INTENT);
 		intent.putExtra(ACTION, ACTION_END);
+		intent.putExtra(SECRET_CODE_NB, secretCodes == null ? SECRET_CODE_NB_INVALID : secretCodes.size());
 		sendBroadcast(intent);
 	}
 }

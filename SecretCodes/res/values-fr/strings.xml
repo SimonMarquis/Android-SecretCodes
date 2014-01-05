@@ -44,4 +44,7 @@
     <string name="extra_text">"Merci de contribuer à la base de données de codes secrets.\nDonnez une petite description pour chaque code secret.\n\n"</string>
     <string name="extra_text_end">"\nMerci ☺"</string>
 
+    <string name="zero_secret_codes">Aucun code secret n\'a été trouvé…</string>
+    <string name="one_secret_codes">Un code secret trouvé</string>
+    <string name="many_secret_codes">%d codes secrets trouvés</string>
 </resources>

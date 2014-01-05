@@ -110,8 +110,10 @@ public class Utils {
 	public static boolean addSecretCode(Context ctx, SecretCode value) {
 		HashSet<SecretCode> secretCodes = new HashSet<SecretCode>(getSecretCodes(ctx));
 		boolean exist = secretCodes.contains(value);
-		secretCodes.add(value);
-		saveSecretCodes(ctx, new ArrayList<SecretCode>(secretCodes));
+		if(!exist){
+			secretCodes.add(value);
+			saveSecretCodes(ctx, new ArrayList<SecretCode>(secretCodes));
+		}
 		return !exist;
 	}
 

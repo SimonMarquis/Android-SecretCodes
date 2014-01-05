@@ -83,7 +83,21 @@ public class MainActivity extends ActionBarActivity {
 					if (mEmptyView != null) {
 						mEmptyView.setEnabled(true);
 						mEmptyView.animate().cancel();
-						mEmptyView.animate().alpha(1).setDuration(getResources().getInteger(android.R.integer.config_longAnimTime));
+						mEmptyView.animate().alpha(1).setDuration(context.getResources().getInteger(android.R.integer.config_longAnimTime));
+					}
+					int nb = bundle.getInt(CrawlerService.SECRET_CODE_NB);
+					switch (nb) {
+					case CrawlerService.SECRET_CODE_NB_INVALID:
+						break;
+					case 0:
+						Toast.makeText(context, context.getResources().getString(R.string.zero_secret_codes), Toast.LENGTH_LONG).show();
+						break;
+					case 1:
+						Toast.makeText(context, context.getResources().getString(R.string.one_secret_codes), Toast.LENGTH_LONG).show();
+						break;
+					default:
+						Toast.makeText(context, context.getResources().getString(R.string.many_secret_codes, nb), Toast.LENGTH_LONG).show();
+						break;
 					}
 					break;
 				default:
@@ -230,16 +244,11 @@ public class MainActivity extends ActionBarActivity {
 
 	private String generateEmailBody(ArrayList<SecretCode> secretCodes) {
 		StringBuilder sb = new StringBuilder(getString(R.string.extra_text)) //
-				.append("DEVICE_MANUFACTURER • ")//
-				.append(Build.MANUFACTURER)//
-				.append("\nDEVICE_MODEL • ")//
-				.append(Build.MODEL)//
-				.append("\nDEVICE_CODE_NAME • ")//
-				.append(Build.DEVICE)//
-				.append("\nDEVICE_LOCALE • ")//
-				.append(Locale.getDefault().getDisplayName())//
-				.append("\nANDROID_VERSION • ")//
-				.append(Build.VERSION.RELEASE)//
+				.append("DEVICE_MANUFACTURER • ").append(Build.MANUFACTURER)//
+				.append("\nDEVICE_MODEL • ").append(Build.MODEL)//
+				.append("\nDEVICE_CODE_NAME • ").append(Build.DEVICE)//
+				.append("\nDEVICE_LOCALE • ").append(Locale.getDefault().getDisplayName())//
+				.append("\nANDROID_VERSION • ").append(Build.VERSION.RELEASE)//
 				.append("\n\n");
 
 		for (SecretCode secretCode : secretCodes) {
