@@ -109,6 +109,11 @@ public class CrawlerService extends Service {
 
 		@Override
 		protected Void doInBackground(Void... params) {
+			try {
+				Thread.sleep(getResources().getInteger(android.R.integer.config_longAnimTime));
+			} catch (InterruptedException e1) {
+				// NO-OP
+			}
 			PackageManager pm = getPackageManager();
 			ArrayList<SecretCode> secretCodes = new ArrayList<SecretCode>();
 			List<android.content.pm.PackageInfo> pil = pm.getInstalledPackages(PackageManager.GET_DISABLED_COMPONENTS);

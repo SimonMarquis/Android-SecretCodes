@@ -39,7 +39,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.view.animation.AnimationUtils;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -54,6 +53,7 @@ import fr.simon.marquis.secretcodes.util.Utils;
 public class MainActivity extends ActionBarActivity {
 
 	private GridView mGridView;
+	private View mEmptyView;
 
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 
@@ -80,6 +80,11 @@ public class MainActivity extends ActionBarActivity {
 					break;
 				case CrawlerService.ACTION_END:
 					supportInvalidateOptionsMenu();
+					if (mEmptyView != null) {
+						mEmptyView.setEnabled(true);
+						mEmptyView.animate().cancel();
+						mEmptyView.animate().alpha(1).setDuration(getResources().getInteger(android.R.integer.config_longAnimTime));
+					}
 					break;
 				default:
 					break;
@@ -94,15 +99,16 @@ public class MainActivity extends ActionBarActivity {
 		supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		getSupportActionBar().setTitle(Utils.applyCustomTypeFace(getString(R.string.app_name), this));
 		setContentView(R.layout.activity_main);
-		View emptyView = findViewById(R.id.emptyView);
+		mEmptyView = findViewById(R.id.emptyView);
 		mGridView = (GridView) findViewById(R.id.gridView);
 		mGridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
 		mGridView.setAdapter(new SecretCodeAdapter(this, Utils.getSecretCodes(this)));
-		mGridView.setEmptyView(emptyView);
-		emptyView.setOnClickListener(new OnClickListener() {
+		mGridView.setEmptyView(mEmptyView);
+		mEmptyView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				v.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, android.R.anim.fade_out));
+				mEmptyView.setEnabled(false);
+				mEmptyView.animate().alpha(0).setDuration(getResources().getInteger(android.R.integer.config_longAnimTime));
 				startService(new Intent(MainActivity.this, CrawlerService.class));
 			}
 		});
@@ -223,13 +229,18 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	private String generateEmailBody(ArrayList<SecretCode> secretCodes) {
-		StringBuilder sb = new StringBuilder(getString(R.string.extra_text))
-		.append("DEVICE_MANUFACTURER • ").append(Build.MANUFACTURER)
-		.append("\nDEVICE_MODEL • ").append(Build.MODEL)
-		.append("\nDEVICE_CODE_NAME • ").append(Build.DEVICE)
-		.append("\nDEVICE_LOCALE • ").append(Locale.getDefault().getDisplayName())
-		.append("\nANDROID_VERSION • ").append(Build.VERSION.RELEASE)
-		.append("\n\n");
+		StringBuilder sb = new StringBuilder(getString(R.string.extra_text)) //
+				.append("DEVICE_MANUFACTURER • ")//
+				.append(Build.MANUFACTURER)//
+				.append("\nDEVICE_MODEL • ")//
+				.append(Build.MODEL)//
+				.append("\nDEVICE_CODE_NAME • ")//
+				.append(Build.DEVICE)//
+				.append("\nDEVICE_LOCALE • ")//
+				.append(Locale.getDefault().getDisplayName())//
+				.append("\nANDROID_VERSION • ")//
+				.append(Build.VERSION.RELEASE)//
+				.append("\n\n");
 
 		for (SecretCode secretCode : secretCodes) {
 			sb.append(secretCode.getCode()).append(" • ").append(secretCode.getLabel()).append("\n↪  \n\n");
