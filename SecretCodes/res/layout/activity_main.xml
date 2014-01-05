@@ -42,7 +42,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:background="@drawable/abc_item_background_holo_light"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="8dp"
@@ -52,7 +51,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:alpha="0.3"
             android:src="@drawable/ic_empty_view" />
 
         <fr.simon.marquis.secretcodes.roboto.RobotoTextView
