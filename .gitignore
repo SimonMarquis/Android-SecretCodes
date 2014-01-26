@@ -20,6 +20,10 @@ local.properties
 .project
 .settings
 
+# IntelliJ files
+.idea
+*.iml
+
 # Gradle
 .gradle
 /local.properties
