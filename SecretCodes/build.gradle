@@ -1,0 +1,23 @@
+apply plugin: 'android'
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "19.0.0"
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 19
+        versionCode 9
+        versionName "1.3.2"
+    }
+    buildTypes {
+        release {
+
+        }
+    }
+}
+
+dependencies {
+    compile 'com.android.support:support-v4:19.0.+'
+    compile 'com.android.support:appcompat-v7:19.0.+'
+}

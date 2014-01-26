@@ -20,6 +20,12 @@ local.properties
 .project
 .settings
 
+# Gradle
+.gradle
+/local.properties
+/.idea/workspace.xml
+
 # Others
 Thumbs.db
 lint.xml
+.DS_Store
