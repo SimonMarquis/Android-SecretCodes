@@ -30,148 +30,155 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import fr.simon.marquis.secretcodes.R;
 import fr.simon.marquis.secretcodes.model.SecretCode;
+import fr.simon.marquis.secretcodes.service.CrawlerService;
 import fr.simon.marquis.secretcodes.util.PlatformVersion;
 import fr.simon.marquis.secretcodes.util.Utils;
 
 public class SecretCodeAdapter extends BaseAdapter {
 
-	private LayoutInflater layoutInflater;
-	private ArrayList<SecretCode> mValues;
-	private PackageManager pm;
-	private Map<SecretCode, Boolean> mCheckedPositions;
-	private int [] mBackgrounds = {R.drawable.card_blueborder, R.drawable.card_goldborder, R.drawable.card_greenborder, R.drawable.card_navyborder, R.drawable.card_purpleborder, R.drawable.card_redborder, R.drawable.card_tealborder, R.drawable.card_yellowborder};
+    private final Object mLock = new Object();
+    private LayoutInflater layoutInflater;
+    private ArrayList<SecretCode> mValues;
+    private PackageManager pm;
+    private Map<SecretCode, Boolean> mCheckedPositions;
+    private int[] mBackgrounds = {R.drawable.card_blueborder, R.drawable.card_goldborder, R.drawable.card_greenborder, R.drawable.card_navyborder, R.drawable.card_purpleborder, R.drawable.card_redborder, R.drawable.card_tealborder, R.drawable.card_yellowborder};
 
-	public SecretCodeAdapter(Context ctx, ArrayList<SecretCode> values) {
-		this.layoutInflater = LayoutInflater.from(ctx);
-		this.mValues = values;
-		this.pm = ctx.getPackageManager();
-		this.mCheckedPositions = new HashMap<SecretCode, Boolean>();
-		Collections.sort(mValues);
-	}
+    public SecretCodeAdapter(Context ctx, ArrayList<SecretCode> values) {
+        this.layoutInflater = LayoutInflater.from(ctx);
+        this.pm = ctx.getPackageManager();
+        this.mCheckedPositions = new HashMap<SecretCode, Boolean>();
+        synchronized (mLock) {
+            this.mValues = values;
+            Collections.sort(mValues);
+        }
+    }
 
-	@Override
-	public int getCount() {
-		return mValues.size();
-	}
+    @Override
+    public int getCount() {
+        return mValues.size();
+    }
 
-	@Override
-	public Object getItem(int position) {
-		return mValues.get(position);
-	}
+    @Override
+    public Object getItem(int position) {
+        return mValues.get(position);
+    }
 
-	@Override
-	public long getItemId(int position) {
-		return 0;
-	}
+    @Override
+    public long getItemId(int position) {
+        return Long.valueOf(mValues.get(position).getCode());
+    }
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		ViewHolder holder;
-		if (convertView == null) {
-			convertView = layoutInflater.inflate(R.layout.row_code, parent, false);
-			holder = new ViewHolder();
-			holder.code = (TextView) convertView.findViewById(R.id.item_code);
-			holder.label = (TextView) convertView.findViewById(R.id.item_label);
-			holder.image = (ImageView) convertView.findViewById(R.id.item_image);
-			holder.selector = (RelativeLayout) convertView.findViewById(R.id.item_selector);
-			holder.background = (View) convertView.findViewById(R.id.item_background);
-			convertView.setTag(holder);
-		} else {
-			holder = (ViewHolder) convertView.getTag();
-		}
+    @SuppressWarnings("deprecation")
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
+        if (convertView == null) {
+            convertView = layoutInflater.inflate(R.layout.row_code, parent, false);
+            holder = new ViewHolder();
+            holder.code = (TextView) convertView.findViewById(R.id.item_code);
+            holder.label = (TextView) convertView.findViewById(R.id.item_label);
+            holder.image = (ImageView) convertView.findViewById(R.id.item_image);
+            holder.selector = (RelativeLayout) convertView.findViewById(R.id.item_selector);
+            holder.background = convertView.findViewById(R.id.item_background);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
 
-		SecretCode secretCode = mValues.get(position);
-		holder.background.setBackgroundResource(mBackgrounds[Math.abs(secretCode.getLabel().hashCode()%8)]);
-		Boolean checked = mCheckedPositions.get(secretCode);
-		holder.code.setText(secretCode.getCode());
-		holder.label.setText(secretCode.getLabel());
-		holder.selector.setBackgroundResource((checked != null && checked.booleanValue()) ? R.drawable.abc_list_pressed_holo_light
-				: R.drawable.abc_list_selector_holo_light);
+        SecretCode secretCode = mValues.get(position);
+        holder.background.setBackgroundResource(mBackgrounds[Math.abs(secretCode.getLabel().hashCode() % 8)]);
+        Boolean checked = mCheckedPositions.get(secretCode);
+        holder.code.setText(secretCode.getCode());
+        holder.label.setText(secretCode.getLabel());
+        holder.selector.setBackgroundResource(checked != null && checked ? R.drawable.abc_list_pressed_holo_light : R.drawable.abc_list_selector_holo_light);
 
-		boolean hasImg = true;
-		if (secretCode.getDrawable() != null) {
-			holder.image.setImageDrawable(secretCode.getDrawable());
-		} else {
-			if (secretCode.getDrawableResource() == 0) {
-				holder.image.setImageResource(R.drawable.ic_action_halt);
-				hasImg = false;
-			} else {
-				secretCode.setDrawable(pm.getDrawable(secretCode.getPackageManager(), secretCode.getDrawableResource(), null));
-				holder.image.setImageDrawable(secretCode.getDrawable());
-			}
-		}
+        boolean hasImg = true;
+        if (secretCode.getDrawable() != null) {
+            holder.image.setImageDrawable(secretCode.getDrawable());
+        } else {
+            if (secretCode.getDrawableResource() == 0) {
+                holder.image.setImageResource(R.drawable.ic_action_halt);
+                hasImg = false;
+            } else {
+                secretCode.setDrawable(pm.getDrawable(secretCode.getPackageManager(), secretCode.getDrawableResource(), null));
+                holder.image.setImageDrawable(secretCode.getDrawable());
+            }
+        }
 
-		if (PlatformVersion.isAtLeastHoneycomb()) {
-			holder.image.setAlpha(hasImg ? 1f : 0.2f);
-		} else {
-			holder.image.setAlpha(hasImg ? 255 : 50);
-		}
+        if (PlatformVersion.isAtLeastHoneycomb()) {
+            holder.image.setAlpha(hasImg ? 1f : 0.2f);
+        } else {
+            holder.image.setAlpha(hasImg ? 255 : 50);
+        }
 
-		return convertView;
-	}
+        return convertView;
+    }
 
-	class ViewHolder {
-		private TextView code;
-		private TextView label;
-		private ImageView image;
-		private RelativeLayout selector;
-		private View background;
-	}
+    public void addItem(SecretCode value, CrawlerService.Action action) {
+        synchronized (mLock) {
+            if (action == CrawlerService.Action.UPDATE) {
+                mValues.remove(value);
+            }
+            mValues.add(value);
+            notifyDataSetChanged();
+        }
+    }
 
-	public void addItem(SecretCode value) {
-		if (!mValues.contains(value)) {
-			mValues.add(value);
-			notifyDataSetChanged();
-		}
-	}
+    @Override
+    public void notifyDataSetChanged() {
+        synchronized (mLock) {
+            Collections.sort(mValues);
+        }
+        super.notifyDataSetChanged();
+    }
 
-	@Override
-	public void notifyDataSetChanged() {
-		Collections.sort(mValues);
-		super.notifyDataSetChanged();
-	}
+    public void resetSelection() {
+        synchronized (mLock) {
+            mCheckedPositions.clear();
+        }
+        notifyDataSetChanged();
+    }
 
-	public ArrayList<SecretCode> getItems() {
-		return mValues;
-	}
+    public void itemCheckedStateChanged(int position, boolean checked) {
+        synchronized (mLock) {
+            mCheckedPositions.put(mValues.get(position), checked);
+        }
+        super.notifyDataSetChanged();
+    }
 
-	public void resetItems() {
-		mValues.clear();
-		mCheckedPositions.clear();
-		notifyDataSetChanged();
-	}
+    public void deleteSelection(Context ctx) {
+        synchronized (mLock) {
+            ArrayList<SecretCode> temp = new ArrayList<SecretCode>();
+            for (SecretCode secretCode : mValues) {
+                if (!mCheckedPositions.containsKey(secretCode) || !mCheckedPositions.get(secretCode)) {
+                    mCheckedPositions.remove(secretCode);
+                    temp.add(secretCode);
+                }
+            }
+            Utils.saveSecretCodes(ctx, temp);
+            mValues = temp;
+        }
+        super.notifyDataSetChanged();
+    }
 
-	public void resetSelection() {
-		mCheckedPositions.clear();
-		notifyDataSetChanged();
-	}
+    public void setSelection(SparseBooleanArray checkedItemPositions) {
+        synchronized (mLock) {
+            mCheckedPositions.clear();
+            for (int i = 0; i < checkedItemPositions.size(); i++) {
+                mCheckedPositions.put(mValues.get(checkedItemPositions.keyAt(i)), checkedItemPositions.valueAt(i));
+            }
+        }
+        super.notifyDataSetChanged();
+    }
 
-	public void itemCheckedStateChanged(int position, boolean checked) {
-		mCheckedPositions.put(mValues.get(position), checked);
-		super.notifyDataSetChanged();
-	}
-
-	public void deleteSelection(Context ctx) {
-		ArrayList<SecretCode> temp = new ArrayList<SecretCode>();
-		for (SecretCode secretCode : mValues) {
-			if (!mCheckedPositions.containsKey(secretCode) || !mCheckedPositions.get(secretCode).booleanValue()) {
-				mCheckedPositions.remove(secretCode);
-				temp.add(secretCode);
-			}
-		}
-		Utils.saveSecretCodes(ctx, temp);
-		mValues = temp;
-		super.notifyDataSetChanged();
-	}
-
-	public void setSelection(SparseBooleanArray checkedItemPositions) {
-		mCheckedPositions.clear();
-		for (int i = 0; i < checkedItemPositions.size(); i++) {
-			mCheckedPositions.put(mValues.get(checkedItemPositions.keyAt(i)), checkedItemPositions.valueAt(i));
-		}
-		super.notifyDataSetChanged();
-	}
+    class ViewHolder {
+        private TextView code;
+        private TextView label;
+        private ImageView image;
+        private RelativeLayout selector;
+        private View background;
+    }
 }

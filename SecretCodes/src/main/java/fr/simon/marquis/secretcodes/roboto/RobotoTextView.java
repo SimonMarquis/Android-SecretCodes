@@ -20,39 +20,40 @@ import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.TextView;
+
 import fr.simon.marquis.secretcodes.R;
 
 public class RobotoTextView extends TextView {
 
-	public RobotoTextView(Context context) {
-		super(context);
-		onInitTypeface(context, null, 0);
-	}
+    public RobotoTextView(Context context) {
+        super(context);
+        onInitTypeface(context, null, 0);
+    }
 
-	public RobotoTextView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		onInitTypeface(context, attrs, 0);
-	}
+    public RobotoTextView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        onInitTypeface(context, attrs, 0);
+    }
 
-	public RobotoTextView(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-		onInitTypeface(context, attrs, defStyle);
-	}
+    public RobotoTextView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        onInitTypeface(context, attrs, defStyle);
+    }
 
-	private void onInitTypeface(Context context, AttributeSet attrs, int defStyle) {
-		if (isInEditMode()) {
-			return;
-		}
+    private void onInitTypeface(Context context, AttributeSet attrs, int defStyle) {
+        if (isInEditMode()) {
+            return;
+        }
 
-		int typefaceValue = 0;
-		if (attrs != null) {
-			TypedArray values = context.obtainStyledAttributes(attrs, R.styleable.RobotoTextView, defStyle, 0);
-			typefaceValue = values.getInt(R.styleable.RobotoTextView_typeface, 0);
-			values.recycle();
-		}
+        int typefaceValue = 0;
+        if (attrs != null) {
+            TypedArray values = context.obtainStyledAttributes(attrs, R.styleable.RobotoTextView, defStyle, 0);
+            typefaceValue = values.getInt(R.styleable.RobotoTextView_typeface, 0);
+            values.recycle();
+        }
 
-		Typeface robotoTypeface = RobotoTypefaceManager.obtaintTypeface(context, typefaceValue);
-		setTypeface(robotoTypeface);
-	}
+        Typeface robotoTypeface = RobotoTypefaceManager.obtaintTypeface(context, typefaceValue);
+        setTypeface(robotoTypeface);
+    }
 
 }

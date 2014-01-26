@@ -24,125 +24,126 @@ import android.graphics.drawable.Drawable;
 
 public class SecretCode implements Comparable<SecretCode> {
 
-	private static final String KEY_CODE = "C";
-	private static final String KEY_LABEL = "L";
-	private static final String KEY_RESOURCE = "R";
-	private static final String KEY_PACKAGE_MANAGER = "P";
+    private static final String KEY_CODE = "C";
+    private static final String KEY_LABEL = "L";
+    private static final String KEY_RESOURCE = "R";
+    private static final String KEY_PACKAGE_MANAGER = "P";
 
-	private String mCode;
-	private String mLabel;
-	private String mPackageManager;
-	private int mDrawableResource;
-	private Drawable mDrawable;
+    private String mCode;
+    private String mLabel;
+    private String mPackageManager;
+    private int mDrawableResource;
+    private Drawable mDrawable;
 
-	public SecretCode(String mCode, String mLabel, String mPackageManager, int mDrawableResource) {
-		this.mCode = mCode;
-		this.mLabel = mLabel;
-		this.mPackageManager = mPackageManager;
-		this.mDrawableResource = mDrawableResource;
-	}
+    public SecretCode(String mCode, String mLabel, String mPackageManager, int mDrawableResource) {
+        this.mCode = mCode;
+        this.mLabel = mLabel;
+        this.mPackageManager = mPackageManager;
+        this.mDrawableResource = mDrawableResource;
+    }
 
-	public String getCode() {
-		return mCode;
-	}
+    public String getCode() {
+        return mCode;
+    }
 
-	public void setCode(String code) {
-		this.mCode = code;
-	}
+    public void setCode(String code) {
+        this.mCode = code;
+    }
 
-	public String getLabel() {
-		return mLabel;
-	}
+    public String getLabel() {
+        return mLabel;
+    }
 
-	public void setLabel(String label) {
-		this.mLabel = label;
-	}
+    public void setLabel(String label) {
+        this.mLabel = label;
+    }
 
-	public int getDrawableResource() {
-		return mDrawableResource;
-	}
+    public int getDrawableResource() {
+        return mDrawableResource;
+    }
 
-	public void setDrawableResource(int resource) {
-		this.mDrawableResource = resource;
-	}
+    public void setDrawableResource(int resource) {
+        this.mDrawableResource = resource;
+    }
 
-	public Drawable getDrawable() {
-		return mDrawable;
-	}
+    public Drawable getDrawable() {
+        return mDrawable;
+    }
 
-	public void setDrawable(Drawable drawable) {
-		this.mDrawable = drawable;
-	}
+    public void setDrawable(Drawable drawable) {
+        this.mDrawable = drawable;
+    }
 
-	public String getPackageManager() {
-		return mPackageManager;
-	}
+    public String getPackageManager() {
+        return mPackageManager;
+    }
 
-	public void setPackageManager(String mPackageManager) {
-		this.mPackageManager = mPackageManager;
-	}
+    public void setPackageManager(String mPackageManager) {
+        this.mPackageManager = mPackageManager;
+    }
 
-	public static SecretCode fromJSON(JSONObject obj) {
-		try {
-			return new SecretCode(obj.getString(KEY_CODE), obj.getString(KEY_LABEL), obj.getString(KEY_PACKAGE_MANAGER), obj.getInt(KEY_RESOURCE));
-		} catch (JSONException e) {
-			return null;
-		} catch (NullPointerException e) {
-			return null;
-		}
-	}
+    public static SecretCode fromJSON(JSONObject obj) {
+        try {
+            return new SecretCode(obj.getString(KEY_CODE), obj.getString(KEY_LABEL), obj.getString(KEY_PACKAGE_MANAGER), obj.getInt(KEY_RESOURCE));
+        } catch (JSONException e) {
+            return null;
+        } catch (NullPointerException e) {
+            return null;
+        }
+    }
 
-	public JSONObject toJSON() {
-		try {
-			JSONObject obj = new JSONObject();
-			obj.put(KEY_CODE, mCode);
-			obj.put(KEY_LABEL, mLabel);
-			obj.put(KEY_PACKAGE_MANAGER, mPackageManager);
-			obj.put(KEY_RESOURCE, mDrawableResource);
-			return obj;
-		} catch (JSONException e) {
-			return null;
-		}
-	}
+    public JSONObject toJSON() {
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put(KEY_CODE, mCode);
+            obj.put(KEY_LABEL, mLabel);
+            obj.put(KEY_PACKAGE_MANAGER, mPackageManager);
+            obj.put(KEY_RESOURCE, mDrawableResource);
+            return obj;
+        } catch (JSONException e) {
+            return null;
+        }
+    }
 
-	@Override
-	public int compareTo(SecretCode another) {
-		int length1 = this.getCode().length();
-		int length2 = another.getCode().length();
-		if (length1 == length2) {
-			return this.getCode().compareTo(another.getCode());
-		}
-		return length1 - length2;
-	}
+    @Override
+    public int compareTo(SecretCode another) {
+        int length1 = this.getCode().length();
+        int length2 = another.getCode().length();
+        if (length1 == length2) {
+            return this.getCode().compareTo(another.getCode());
+        }
+        return length1 - length2;
+    }
 
-	// TODO
-	public static SecretCode fromResolveInfo(String code, ResolveInfo resolveInfo, PackageManager pm) {
-		return new SecretCode(code, String.valueOf(resolveInfo.loadLabel(pm)), resolveInfo.activityInfo.packageName, resolveInfo.getIconResource());
-	}
+    // TODO
+    public static SecretCode fromResolveInfo(String code, ResolveInfo resolveInfo, PackageManager pm) {
+        return new SecretCode(code, String.valueOf(resolveInfo.loadLabel(pm)), resolveInfo.activityInfo.packageName, resolveInfo.getIconResource());
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((mCode == null) ? 0 : mCode.hashCode());
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((mCode == null) ? 0 : mCode.hashCode());
+        return result;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		SecretCode other = (SecretCode) obj;
-		if (mCode == null) {
-			if (other.mCode != null)
-				return false;
-		} else if (!mCode.equals(other.mCode))
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (((Object) this).getClass() != obj.getClass())
+            return false;
+        SecretCode other = (SecretCode) obj;
+        if (mCode == null) {
+            if (other.mCode != null)
+                return false;
+        } else if (!mCode.equals(other.mCode))
+            return false;
+        return true;
+    }
+
 
 }

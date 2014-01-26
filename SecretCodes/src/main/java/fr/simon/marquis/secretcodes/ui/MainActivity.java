@@ -15,13 +15,6 @@
  */
 package fr.simon.marquis.secretcodes.ui;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Locale;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -44,6 +37,14 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Locale;
+
 import fr.simon.marquis.secretcodes.R;
 import fr.simon.marquis.secretcodes.model.SecretCode;
 import fr.simon.marquis.secretcodes.service.CrawlerService;
@@ -52,240 +53,244 @@ import fr.simon.marquis.secretcodes.util.Utils;
 
 public class MainActivity extends ActionBarActivity {
 
-	private GridView mGridView;
-	private View mEmptyView;
+    public static final String KEY_START = "START";
+    public static final String KEY_ABOUT = "ABOUT";
+    private GridView mGridView;
+    private View mEmptyView;
 
-	private BroadcastReceiver receiver = new BroadcastReceiver() {
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
 
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			Bundle bundle = intent.getExtras();
-			if (bundle != null) {
-				switch (bundle.getInt(CrawlerService.ACTION)) {
-				case CrawlerService.ACTION_START:
-					supportInvalidateOptionsMenu();
-					break;
-				case CrawlerService.ACTION_ADD:
-					String obj = bundle.getString(CrawlerService.SECRETCODE_KEY);
-					if (obj != null) {
-						try {
-							SecretCode sc = SecretCode.fromJSON(new JSONObject(obj));
-							if (mGridView != null) {
-								((SecretCodeAdapter) mGridView.getAdapter()).addItem(sc);
-							}
-						} catch (JSONException e) {
-							// No-op
-						}
-					}
-					break;
-				case CrawlerService.ACTION_END:
-					supportInvalidateOptionsMenu();
-					if (mEmptyView != null) {
-						mEmptyView.setEnabled(true);
-						mEmptyView.animate().cancel();
-						mEmptyView.animate().alpha(1).setDuration(context.getResources().getInteger(android.R.integer.config_longAnimTime));
-					}
-					int nb = bundle.getInt(CrawlerService.SECRET_CODE_NB);
-					switch (nb) {
-					case CrawlerService.SECRET_CODE_NB_INVALID:
-						break;
-					case 0:
-						Toast.makeText(context, context.getResources().getString(R.string.zero_secret_codes), Toast.LENGTH_LONG).show();
-						break;
-					case 1:
-						Toast.makeText(context, context.getResources().getString(R.string.one_secret_codes), Toast.LENGTH_LONG).show();
-						break;
-					default:
-						Toast.makeText(context, context.getResources().getString(R.string.many_secret_codes, nb), Toast.LENGTH_LONG).show();
-						break;
-					}
-					break;
-				default:
-					break;
-				}
-			}
-		}
-	};
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                CrawlerService.Action action = (CrawlerService.Action) bundle.getSerializable(CrawlerService.ACTION);
+                switch (action) {
+                    case START:
+                        supportInvalidateOptionsMenu();
+                        break;
+                    case ADD:
+                    case UPDATE:
+                        String obj = bundle.getString(CrawlerService.SECRETCODE_KEY);
+                        if (obj != null) {
+                            try {
+                                SecretCode sc = SecretCode.fromJSON(new JSONObject(obj));
+                                if (mGridView != null) {
+                                    ((SecretCodeAdapter) mGridView.getAdapter()).addItem(sc, action);
+                                }
+                            } catch (JSONException e) {
+                                // No-op
+                            }
+                        }
+                        break;
+                    case END:
+                        supportInvalidateOptionsMenu();
+                        if (mEmptyView != null) {
+                            mEmptyView.setEnabled(true);
+                            mEmptyView.animate().cancel();
+                            mEmptyView.animate().alpha(1).setDuration(context.getResources().getInteger(android.R.integer.config_longAnimTime));
+                        }
+                        int nb = bundle.getInt(CrawlerService.SECRET_CODE_NB);
+                        switch (nb) {
+                            case CrawlerService.SECRET_CODE_NB_INVALID:
+                                break;
+                            case 0:
+                                Toast.makeText(context, context.getResources().getString(R.string.zero_secret_codes), Toast.LENGTH_LONG).show();
+                                break;
+                            case 1:
+                                Toast.makeText(context, context.getResources().getString(R.string.one_secret_codes), Toast.LENGTH_LONG).show();
+                                break;
+                            default:
+                                Toast.makeText(context, context.getResources().getString(R.string.many_secret_codes, nb), Toast.LENGTH_LONG).show();
+                                break;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    };
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		getSupportActionBar().setTitle(Utils.applyCustomTypeFace(getString(R.string.app_name), this));
-		setContentView(R.layout.activity_main);
-		mEmptyView = findViewById(R.id.emptyView);
-		mGridView = (GridView) findViewById(R.id.gridView);
-		mGridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
-		mGridView.setAdapter(new SecretCodeAdapter(this, Utils.getSecretCodes(this)));
-		mGridView.setEmptyView(mEmptyView);
-		mEmptyView.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mEmptyView.setEnabled(false);
-				mEmptyView.animate().alpha(0).setDuration(getResources().getInteger(android.R.integer.config_longAnimTime));
-				startService(new Intent(MainActivity.this, CrawlerService.class));
-			}
-		});
-		mGridView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				String code = ((SecretCode) arg0.getItemAtPosition(arg2)).getCode();
-				Toast.makeText(MainActivity.this, getString(R.string.execute_code, code), Toast.LENGTH_SHORT).show();
-				try {
-					sendBroadcast(new Intent("android.provider.Telephony.SECRET_CODE", Uri.parse("android_secret_code://" + code)));
-				} catch (java.lang.SecurityException se) {
-					Toast.makeText(MainActivity.this, R.string.security_exception, Toast.LENGTH_LONG).show();
-				}
-			}
-		});
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        getSupportActionBar().setTitle(Utils.applyCustomTypeFace(getString(R.string.app_name), this));
+        setContentView(R.layout.activity_main);
+        mEmptyView = findViewById(R.id.emptyView);
+        mGridView = (GridView) findViewById(R.id.gridView);
+        mGridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
+        mGridView.setAdapter(new SecretCodeAdapter(this, Utils.getSecretCodes(this)));
+        mGridView.setEmptyView(mEmptyView);
+        mEmptyView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mEmptyView.setEnabled(false);
+                mEmptyView.animate().alpha(0).setDuration(getResources().getInteger(android.R.integer.config_longAnimTime));
+                startService(new Intent(MainActivity.this, CrawlerService.class));
+            }
+        });
+        mGridView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                String code = ((SecretCode) arg0.getItemAtPosition(arg2)).getCode();
+                Toast.makeText(MainActivity.this, getString(R.string.execute_code, code), Toast.LENGTH_SHORT).show();
+                try {
+                    sendBroadcast(new Intent("android.provider.Telephony.SECRET_CODE", Uri.parse("android_secret_code://" + code)));
+                } catch (java.lang.SecurityException se) {
+                    Toast.makeText(MainActivity.this, R.string.security_exception, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
 
-		mGridView.setMultiChoiceModeListener(new MultiChoiceModeListener() {
+        mGridView.setMultiChoiceModeListener(new MultiChoiceModeListener() {
 
-			@Override
-			public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-				((SecretCodeAdapter) mGridView.getAdapter()).itemCheckedStateChanged(position, checked);
-				mode.setTitle(Html.fromHtml("<b>" + mGridView.getCheckedItemCount() + "</b>"));
-			}
+            @Override
+            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+                ((SecretCodeAdapter) mGridView.getAdapter()).itemCheckedStateChanged(position, checked);
+                mode.setTitle(Html.fromHtml("<b>" + mGridView.getCheckedItemCount() + "</b>"));
+            }
 
-			@Override
-			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-				switch (item.getItemId()) {
-				case R.id.action_delete:
-					((SecretCodeAdapter) mGridView.getAdapter()).deleteSelection(getApplicationContext());
-					mode.finish();
-					return true;
-				case R.id.action_select_all:
-					boolean check = mGridView.getCheckedItemCount() != mGridView.getCount();
-					for (int i = 0; i < mGridView.getCount(); i++) {
-						mGridView.setItemChecked(i, check);
-					}
-					return true;
-				default:
-					return false;
-				}
-			}
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_delete:
+                        ((SecretCodeAdapter) mGridView.getAdapter()).deleteSelection(getApplicationContext());
+                        mode.finish();
+                        return true;
+                    case R.id.action_select_all:
+                        boolean check = mGridView.getCheckedItemCount() != mGridView.getCount();
+                        for (int i = 0; i < mGridView.getCount(); i++) {
+                            mGridView.setItemChecked(i, check);
+                        }
+                        return true;
+                    default:
+                        return false;
+                }
+            }
 
-			@Override
-			public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-				MenuInflater inflater = mode.getMenuInflater();
-				inflater.inflate(R.menu.cab, menu);
-				return true;
-			}
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                MenuInflater inflater = mode.getMenuInflater();
+                inflater.inflate(R.menu.cab, menu);
+                return true;
+            }
 
-			@Override
-			public void onDestroyActionMode(ActionMode mode) {
-				((SecretCodeAdapter) mGridView.getAdapter()).resetSelection();
-				supportInvalidateOptionsMenu();
-			}
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+                ((SecretCodeAdapter) mGridView.getAdapter()).resetSelection();
+                supportInvalidateOptionsMenu();
+            }
 
-			@Override
-			public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-				return false;
-			}
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
 
-		});
+        });
 
-		supportInvalidateOptionsMenu();
-	}
+        supportInvalidateOptionsMenu();
+    }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		setSupportProgressBarIndeterminateVisibility(CrawlerService.isCrawling);
-		menu.findItem(R.id.action_scan).setVisible(!CrawlerService.isCrawling && !mGridView.getAdapter().isEmpty());
-		menu.findItem(R.id.action_cancel).setVisible(CrawlerService.isCrawling);
-		return super.onPrepareOptionsMenu(menu);
-	}
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        setSupportProgressBarIndeterminateVisibility(CrawlerService.isCrawling);
+        menu.findItem(R.id.action_scan).setVisible(!CrawlerService.isCrawling && !mGridView.getAdapter().isEmpty());
+        menu.findItem(R.id.action_cancel).setVisible(CrawlerService.isCrawling);
+        return super.onPrepareOptionsMenu(menu);
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.action_scan:
-			startService(new Intent(this, CrawlerService.class));
-			break;
-		case R.id.action_cancel:
-			stopService(new Intent(this, CrawlerService.class));
-			break;
-		case R.id.show_popop:
-			showPopup(false);
-			break;
-		case R.id.action_online_database:
-			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.online_database_url))));
-			break;
-		case R.id.action_contribute:
-			exportSecretCodes();
-			break;
-		default:
-			break;
-		}
-		return super.onOptionsItemSelected(item);
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_scan:
+                startService(new Intent(this, CrawlerService.class));
+                break;
+            case R.id.action_cancel:
+                stopService(new Intent(this, CrawlerService.class));
+                break;
+            case R.id.show_popop:
+                showAboutDialog(false);
+                break;
+            case R.id.action_online_database:
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.online_database_url))));
+                break;
+            case R.id.action_contribute:
+                exportSecretCodes();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-	private void exportSecretCodes() {
-		ArrayList<SecretCode> secretCodes = Utils.getSecretCodes(this);
-		Collections.sort(secretCodes);
-		if (secretCodes.isEmpty()) {
-			Toast.makeText(MainActivity.this, getString(R.string.no_secret_code), Toast.LENGTH_SHORT).show();
-			return;
-		}
-		sendEmail(secretCodes);
-	}
+    private void exportSecretCodes() {
+        ArrayList<SecretCode> secretCodes = Utils.getSecretCodes(this);
+        Collections.sort(secretCodes);
+        if (secretCodes.isEmpty()) {
+            Toast.makeText(MainActivity.this, getString(R.string.no_secret_code), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        sendEmail(secretCodes);
+    }
 
-	private void sendEmail(ArrayList<SecretCode> secretCodes) {
-		Intent i = new Intent(Intent.ACTION_SEND);
-		i.setType("message/rfc822");
-		i.putExtra(Intent.EXTRA_EMAIL, new String[] { getString(R.string.extra_email) });
-		i.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.extra_subject));
-		i.putExtra(Intent.EXTRA_TEXT, generateEmailBody(secretCodes));
-		i.putExtra(Intent.EXTRA_STREAM, ExportContentProvider.CONTENT_URI);
-		startActivity(Intent.createChooser(i, null));
-	}
+    private void sendEmail(ArrayList<SecretCode> secretCodes) {
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("message/rfc822");
+        i.putExtra(Intent.EXTRA_EMAIL, new String[]{getString(R.string.extra_email)});
+        i.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.extra_subject));
+        i.putExtra(Intent.EXTRA_TEXT, generateEmailBody(secretCodes));
+        i.putExtra(Intent.EXTRA_STREAM, ExportContentProvider.CONTENT_URI);
+        startActivity(Intent.createChooser(i, null));
+    }
 
-	private String generateEmailBody(ArrayList<SecretCode> secretCodes) {
-		StringBuilder sb = new StringBuilder(getString(R.string.extra_text)) //
-				.append("DEVICE_MANUFACTURER • ").append(Build.MANUFACTURER)//
-				.append("\nDEVICE_MODEL • ").append(Build.MODEL)//
-				.append("\nDEVICE_CODE_NAME • ").append(Build.DEVICE)//
-				.append("\nDEVICE_LOCALE • ").append(Locale.getDefault().getDisplayName())//
-				.append("\nANDROID_VERSION • ").append(Build.VERSION.RELEASE)//
-				.append("\n\n");
+    private String generateEmailBody(ArrayList<SecretCode> secretCodes) {
+        StringBuilder sb = new StringBuilder(getString(R.string.extra_text)) //
+                .append("DEVICE_MANUFACTURER • ").append(Build.MANUFACTURER)//
+                .append("\nDEVICE_MODEL • ").append(Build.MODEL)//
+                .append("\nDEVICE_CODE_NAME • ").append(Build.DEVICE)//
+                .append("\nDEVICE_LOCALE • ").append(Locale.getDefault().getDisplayName())//
+                .append("\nANDROID_VERSION • ").append(Build.VERSION.RELEASE)//
+                .append("\n\n");
 
-		for (SecretCode secretCode : secretCodes) {
-			sb.append(secretCode.getCode()).append(" • ").append(secretCode.getLabel()).append("\n↪  \n\n");
-		}
-		return sb.append(getString(R.string.extra_text_end)).toString();
-	}
+        for (SecretCode secretCode : secretCodes) {
+            sb.append(secretCode.getCode()).append(" • ").append(secretCode.getLabel()).append("\n↪  \n\n");
+        }
+        return sb.append(getString(R.string.extra_text_end)).toString();
+    }
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		((SecretCodeAdapter) mGridView.getAdapter()).setSelection(mGridView.getCheckedItemPositions());
-		registerReceiver(receiver, new IntentFilter(CrawlerService.BROADCAST_INTENT));
-		supportInvalidateOptionsMenu();
-	}
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ((SecretCodeAdapter) mGridView.getAdapter()).setSelection(mGridView.getCheckedItemPositions());
+        registerReceiver(receiver, new IntentFilter(CrawlerService.BROADCAST_INTENT));
+        supportInvalidateOptionsMenu();
+    }
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-		unregisterReceiver(receiver);
-	}
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(receiver);
+    }
 
-	@Override
-	public void onBackPressed() {
-		if (PreferenceManager.getDefaultSharedPreferences(this).contains("about")) {
-			super.onBackPressed();
-		} else {
-			showPopup(true);
-		}
-	}
+    @Override
+    public void onBackPressed() {
+        if (PreferenceManager.getDefaultSharedPreferences(this).contains(KEY_ABOUT)) {
+            super.onBackPressed();
+        } else {
+            showAboutDialog(true);
+        }
+    }
 
-	private void showPopup(boolean exit) {
-		AboutDialog newFragment = AboutDialog.newInstance(exit);
-		newFragment.show(getSupportFragmentManager(), "about");
-	}
+    private void showAboutDialog(boolean exit) {
+        AboutDialog newFragment = AboutDialog.newInstance(exit);
+        newFragment.show(getSupportFragmentManager(), KEY_ABOUT);
+    }
 }

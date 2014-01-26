@@ -42,172 +42,173 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
+
 import fr.simon.marquis.secretcodes.model.SecretCode;
 
 public class ExportContentProvider extends ContentProvider {
 
-	private static final String ZIP_FILE_NAME = "SecretCodes.zip";
-	private static final String JSON_FILE_NAME = "SecretCodes.json";
-	private static final int BUFFER = 2048;
+    private static final String ZIP_FILE_NAME = "SecretCodes.zip";
+    private static final String JSON_FILE_NAME = "SecretCodes.json";
+    private static final int BUFFER = 2048;
 
-	public static final Uri CONTENT_URI = Uri.parse("content://fr.simon.marquis.secretcodes.data/" + ZIP_FILE_NAME);
-	private static final String DEVICE_MANUFACTURER = "DEVICE_MANUFACTURER";
-	private static final String DEVICE_MODEL = "DEVICE_MODEL";
-	private static final String DEVICE_CODE_NAME = "DEVICE_CODE_NAME";
-	private static final String DEVICE_LOCALE = "DEVICE_LOCALE";
-	private static final String ANDROID_VERSION = "ANDROID_VERSION";
-	private static final String SECRET_CODES = "SECRET_CODES";
+    public static final Uri CONTENT_URI = Uri.parse("content://fr.simon.marquis.secretcodes.data/" + ZIP_FILE_NAME);
+    private static final String DEVICE_MANUFACTURER = "DEVICE_MANUFACTURER";
+    private static final String DEVICE_MODEL = "DEVICE_MODEL";
+    private static final String DEVICE_CODE_NAME = "DEVICE_CODE_NAME";
+    private static final String DEVICE_LOCALE = "DEVICE_LOCALE";
+    private static final String ANDROID_VERSION = "ANDROID_VERSION";
+    private static final String SECRET_CODES = "SECRET_CODES";
 
-	public ExportContentProvider() {
-	}
+    public ExportContentProvider() {
+    }
 
-	@Override
-	public int delete(Uri uri, String selection, String[] selectionArgs) {
-		return 0;
-	}
+    @Override
+    public int delete(Uri uri, String selection, String[] selectionArgs) {
+        return 0;
+    }
 
-	@Override
-	public String getType(Uri uri) {
-		return null;
-	}
+    @Override
+    public String getType(Uri uri) {
+        return null;
+    }
 
-	@Override
-	public Uri insert(Uri uri, ContentValues values) {
-		return null;
-	}
+    @Override
+    public Uri insert(Uri uri, ContentValues values) {
+        return null;
+    }
 
-	@Override
-	public boolean onCreate() {
-		return true;
-	}
+    @Override
+    public boolean onCreate() {
+        return true;
+    }
 
-	@Override
-	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-		return null;
-	}
+    @Override
+    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        return null;
+    }
 
-	@Override
-	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-		return 0;
-	}
+    @Override
+    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        return 0;
+    }
 
-	@Override
-	public ParcelFileDescriptor openFile(Uri uri, String mode) throws FileNotFoundException {
-		if (!CONTENT_URI.equals(uri)) {
-			throw new FileNotFoundException(uri.getPath());
-		}
+    @Override
+    public ParcelFileDescriptor openFile(Uri uri, String mode) throws FileNotFoundException {
+        if (!CONTENT_URI.equals(uri)) {
+            throw new FileNotFoundException(uri.getPath());
+        }
 
-		ArrayList<SecretCode> secretCodes = Utils.getSecretCodes(getContext());
+        ArrayList<SecretCode> secretCodes = Utils.getSecretCodes(getContext());
 
-		deletePreviousData();
-		saveJsonFile(secretCodes);
-		saveImageFiles(secretCodes);
-		saveZipFile();
+        deletePreviousData();
+        saveJsonFile(secretCodes);
+        saveImageFiles(secretCodes);
+        saveZipFile();
 
-		File zipFile = new File(getContext().getFilesDir(), ZIP_FILE_NAME);
-		if (zipFile.exists()) {
-			return ParcelFileDescriptor.open(zipFile, ParcelFileDescriptor.MODE_READ_ONLY);
-		}
-		throw new FileNotFoundException(uri.getPath());
-	}
+        File zipFile = new File(getContext().getFilesDir(), ZIP_FILE_NAME);
+        if (zipFile.exists()) {
+            return ParcelFileDescriptor.open(zipFile, ParcelFileDescriptor.MODE_READ_ONLY);
+        }
+        throw new FileNotFoundException(uri.getPath());
+    }
 
-	private void saveZipFile() {
-		File[] files = getContext().getFilesDir().listFiles();
-		String zipPath = getContext().getFilesDir().getAbsolutePath() + "/" + ZIP_FILE_NAME;
-		try {
-			BufferedInputStream origin = null;
-			FileOutputStream zipFile = new FileOutputStream(zipPath);
+    private void saveZipFile() {
+        File[] files = getContext().getFilesDir().listFiles();
+        String zipPath = getContext().getFilesDir().getAbsolutePath() + "/" + ZIP_FILE_NAME;
+        try {
+            BufferedInputStream origin = null;
+            FileOutputStream zipFile = new FileOutputStream(zipPath);
 
-			ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(zipFile));
+            ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(zipFile));
 
-			byte data[] = new byte[BUFFER];
-			for (int i = 0; i < files.length; i++) {
-				FileInputStream fi = new FileInputStream(files[i]);
-				origin = new BufferedInputStream(fi, BUFFER);
-				ZipEntry entry = new ZipEntry(files[i].getAbsolutePath().substring(files[i].getAbsolutePath().lastIndexOf("/") + 1));
-				out.putNextEntry(entry);
-				int count;
-				while ((count = origin.read(data, 0, BUFFER)) != -1) {
-					out.write(data, 0, count);
-				}
-				origin.close();
-			}
+            byte data[] = new byte[BUFFER];
+            for (int i = 0; i < files.length; i++) {
+                FileInputStream fi = new FileInputStream(files[i]);
+                origin = new BufferedInputStream(fi, BUFFER);
+                ZipEntry entry = new ZipEntry(files[i].getAbsolutePath().substring(files[i].getAbsolutePath().lastIndexOf("/") + 1));
+                out.putNextEntry(entry);
+                int count;
+                while ((count = origin.read(data, 0, BUFFER)) != -1) {
+                    out.write(data, 0, count);
+                }
+                origin.close();
+            }
 
-			out.close();
-			Log.d(this.getClass().getSimpleName(), "zipFile created at " + zipPath + " with " + files.length + " files");
-		} catch (Exception e) {
-			e.printStackTrace();
-			Log.e(this.getClass().getSimpleName(), "error while zipping at " + zipPath + " with " + files.length + " files", e);
-		}
+            out.close();
+            Log.d(this.getClass().getSimpleName(), "zipFile created at " + zipPath + " with " + files.length + " files");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(this.getClass().getSimpleName(), "error while zipping at " + zipPath + " with " + files.length + " files", e);
+        }
 
-	}
+    }
 
-	private void saveImageFiles(ArrayList<SecretCode> secretCodes) {
-		for (SecretCode secretCode : secretCodes) {
-			try {
-				if (secretCode.getDrawableResource() == 0) {
-					continue;
-				}
-				Drawable drawable = getContext().getPackageManager().getDrawable(secretCode.getPackageManager(), secretCode.getDrawableResource(),
-						null);
-				if (drawable == null) {
-					continue;
-				}
-				int height = drawable.getIntrinsicHeight();
-				int width = drawable.getIntrinsicWidth();
-				Bitmap createBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-				if (createBitmap == null) {
-					continue;
-				}
-				Canvas canvas = new Canvas(createBitmap);
-				drawable.setBounds(0, 0, width, height);
-				drawable.draw(canvas);
+    private void saveImageFiles(ArrayList<SecretCode> secretCodes) {
+        for (SecretCode secretCode : secretCodes) {
+            try {
+                if (secretCode.getDrawableResource() == 0) {
+                    continue;
+                }
+                Drawable drawable = getContext().getPackageManager().getDrawable(secretCode.getPackageManager(), secretCode.getDrawableResource(),
+                        null);
+                if (drawable == null) {
+                    continue;
+                }
+                int height = drawable.getIntrinsicHeight();
+                int width = drawable.getIntrinsicWidth();
+                Bitmap createBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+                if (createBitmap == null) {
+                    continue;
+                }
+                Canvas canvas = new Canvas(createBitmap);
+                drawable.setBounds(0, 0, width, height);
+                drawable.draw(canvas);
 
-				FileOutputStream openFileOutput = getContext().openFileOutput(secretCode.getCode() + ".png", Context.MODE_PRIVATE);
-				createBitmap.compress(Bitmap.CompressFormat.PNG, 100, openFileOutput);
-				openFileOutput.flush();
-				openFileOutput.close();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+                FileOutputStream openFileOutput = getContext().openFileOutput(secretCode.getCode() + ".png", Context.MODE_PRIVATE);
+                createBitmap.compress(Bitmap.CompressFormat.PNG, 100, openFileOutput);
+                openFileOutput.flush();
+                openFileOutput.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
-	}
+    }
 
-	private void saveJsonFile(ArrayList<SecretCode> secretCodes) {
-		try {
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.put(DEVICE_MANUFACTURER, Build.MANUFACTURER);
-			jsonObject.put(DEVICE_MODEL, Build.MODEL);
-			jsonObject.put(DEVICE_CODE_NAME, Build.DEVICE);
-			jsonObject.put(DEVICE_LOCALE, Locale.getDefault().getDisplayName());
-			jsonObject.put(ANDROID_VERSION, String.valueOf(Build.VERSION.RELEASE));
+    private void saveJsonFile(ArrayList<SecretCode> secretCodes) {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(DEVICE_MANUFACTURER, Build.MANUFACTURER);
+            jsonObject.put(DEVICE_MODEL, Build.MODEL);
+            jsonObject.put(DEVICE_CODE_NAME, Build.DEVICE);
+            jsonObject.put(DEVICE_LOCALE, Locale.getDefault().getDisplayName());
+            jsonObject.put(ANDROID_VERSION, String.valueOf(Build.VERSION.RELEASE));
 
-			JSONArray jsonArray = new JSONArray();
-			for (SecretCode secretCode : secretCodes) {
-				jsonArray.put(secretCode.toJSON());
-			}
+            JSONArray jsonArray = new JSONArray();
+            for (SecretCode secretCode : secretCodes) {
+                jsonArray.put(secretCode.toJSON());
+            }
 
-			jsonObject.put(SECRET_CODES, jsonArray);
+            jsonObject.put(SECRET_CODES, jsonArray);
 
-			FileOutputStream openFileOutput = getContext().openFileOutput(JSON_FILE_NAME, Context.MODE_PRIVATE);
-			openFileOutput.write(jsonObject.toString(4).getBytes());
-			openFileOutput.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
+            FileOutputStream openFileOutput = getContext().openFileOutput(JSON_FILE_NAME, Context.MODE_PRIVATE);
+            openFileOutput.write(jsonObject.toString(4).getBytes());
+            openFileOutput.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
-	private void deletePreviousData() {
-		String[] fileList = getContext().fileList();
-		for (String file : fileList) {
-			getContext().deleteFile(file);
-		}
-	}
+    private void deletePreviousData() {
+        String[] fileList = getContext().fileList();
+        for (String file : fileList) {
+            getContext().deleteFile(file);
+        }
+    }
 }
