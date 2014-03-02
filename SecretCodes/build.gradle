@@ -1,23 +1,56 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.8.+'
+    }
+}
+
 apply plugin: 'android'
 
-android {
-    compileSdkVersion 19
-    buildToolsVersion "19.0.0"
-
-    defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 19
-        versionCode 9
-        versionName "1.3.3"
-    }
-    buildTypes {
-        release {
-
-        }
-    }
+repositories {
+    mavenCentral()
 }
 
 dependencies {
     compile 'com.android.support:support-v4:19.0.+'
     compile 'com.android.support:appcompat-v7:19.0.+'
+}
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "19.0.0"
+
+    def Properties versionProps = new Properties()
+    versionProps.load(new FileInputStream(file('version.properties')))
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 19
+
+        versionName versionProps['name']
+        versionCode versionProps['code'].toInteger()
+    }
+
+    signingConfigs {
+        release {
+            def Properties localProps = new Properties()
+            localProps.load(new FileInputStream(file('../local.properties')))
+            def Properties keyProps = new Properties()
+            assert localProps['keystore.props.file'];
+            keyProps.load(new FileInputStream(file(localProps['keystore.props.file'])))
+            storeFile file(keyProps["store"])
+            keyAlias keyProps["alias"]
+            storePassword keyProps["storePass"]
+            keyPassword keyProps["pass"]
+        }
+    }
+
+    buildTypes {
+        release {
+            runProguard false
+            signingConfig signingConfigs.release
+        }
+    }
 }

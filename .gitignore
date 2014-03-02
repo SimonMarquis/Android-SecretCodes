@@ -11,25 +11,25 @@
 # generated files
 bin/
 gen/
+.gradle/
+build/
 
 # Local configuration file (sdk path, etc)
 local.properties
+keystore.properties
 
 # Eclipse project files
 .classpath
 .project
 .settings
 
-# IntelliJ files
-.idea
-*.iml
-
-# Gradle
-.gradle
-/local.properties
-/.idea/workspace.xml
-
 # Others
 Thumbs.db
 lint.xml
-.DS_Store
+
+# Idea non-crucial project fileS
+*.iws
+
+# Project files
+*.iml
+.idea
