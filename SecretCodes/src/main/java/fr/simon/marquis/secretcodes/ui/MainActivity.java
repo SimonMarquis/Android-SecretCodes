@@ -53,7 +53,6 @@ import fr.simon.marquis.secretcodes.util.Utils;
 
 public class MainActivity extends ActionBarActivity {
 
-    public static final String KEY_START = "START";
     public static final String KEY_ABOUT = "ABOUT";
     private GridView mGridView;
     private View mEmptyView;
@@ -173,7 +172,9 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
                 MenuInflater inflater = mode.getMenuInflater();
-                inflater.inflate(R.menu.cab, menu);
+                if (inflater != null) {
+                    inflater.inflate(R.menu.cab, menu);
+                }
                 return true;
             }
 

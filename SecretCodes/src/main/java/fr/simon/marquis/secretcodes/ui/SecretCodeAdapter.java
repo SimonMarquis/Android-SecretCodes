@@ -68,7 +68,7 @@ public class SecretCodeAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return Long.valueOf(mValues.get(position).getCode());
+        return (long) mValues.get(position).hashCode();
     }
 
     @SuppressWarnings("deprecation")
