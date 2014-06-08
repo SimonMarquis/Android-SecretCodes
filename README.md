@@ -17,6 +17,11 @@ Screenshots
 ![Screenshot][screen2]
 ![Screenshot][screen3]
 
+Video
+-----
+
+[![Youtube Video](http://img.youtube.com/vi/UKwyspMBW3g/0.jpg)](http://www.youtube.com/watch?v=UKwyspMBW3g)
+
 What is a secret code?
 ----------------------
 
