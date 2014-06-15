@@ -15,13 +15,9 @@
  */
 package fr.simon.marquis.secretcodes.ui;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,10 +27,16 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import fr.simon.marquis.secretcodes.R;
 import fr.simon.marquis.secretcodes.model.SecretCode;
 import fr.simon.marquis.secretcodes.service.CrawlerService;
-import fr.simon.marquis.secretcodes.util.PlatformVersion;
 import fr.simon.marquis.secretcodes.util.Utils;
 
 public class SecretCodeAdapter extends BaseAdapter {
@@ -42,12 +44,14 @@ public class SecretCodeAdapter extends BaseAdapter {
     private final Object mLock = new Object();
     private LayoutInflater layoutInflater;
     private ArrayList<SecretCode> mValues;
+    private Context context;
     private PackageManager pm;
     private Map<SecretCode, Boolean> mCheckedPositions;
     private int[] mBackgrounds = {R.drawable.card_blueborder, R.drawable.card_goldborder, R.drawable.card_greenborder, R.drawable.card_navyborder, R.drawable.card_purpleborder, R.drawable.card_redborder, R.drawable.card_tealborder, R.drawable.card_yellowborder};
 
     public SecretCodeAdapter(Context ctx, ArrayList<SecretCode> values) {
         this.layoutInflater = LayoutInflater.from(ctx);
+        this.context = ctx;
         this.pm = ctx.getPackageManager();
         this.mCheckedPositions = new HashMap<SecretCode, Boolean>();
         synchronized (mLock) {
@@ -93,26 +97,15 @@ public class SecretCodeAdapter extends BaseAdapter {
         Boolean checked = mCheckedPositions.get(secretCode);
         holder.code.setText(secretCode.getCode());
         holder.label.setText(secretCode.getLabel());
-        holder.selector.setBackgroundResource(checked != null && checked ? R.drawable.abc_list_pressed_holo_light : R.drawable.abc_list_selector_holo_light);
+        holder.selector.setBackgroundResource(checked != null && checked ? R.drawable.abc_list_pressed_holo_light : R.drawable.selectable_background);
 
-        boolean hasImg = true;
-        if (secretCode.getDrawable() != null) {
-            holder.image.setImageDrawable(secretCode.getDrawable());
+        Uri uri = secretCode.getIconUri();
+        if (uri != null) {
+            Picasso.with(context).load(uri).error(R.drawable.ic_action_wizard).into(holder.image);
         } else {
-            if (secretCode.getDrawableResource() == 0) {
-                holder.image.setImageResource(R.drawable.ic_action_halt);
-                hasImg = false;
-            } else {
-                secretCode.setDrawable(pm.getDrawable(secretCode.getPackageManager(), secretCode.getDrawableResource(), null));
-                holder.image.setImageDrawable(secretCode.getDrawable());
-            }
+            holder.image.setImageResource(R.drawable.ic_action_wizard);
         }
-
-        if (PlatformVersion.isAtLeastHoneycomb()) {
-            holder.image.setAlpha(hasImg ? 1f : 0.2f);
-        } else {
-            holder.image.setAlpha(hasImg ? 255 : 50);
-        }
+        holder.image.setAlpha(uri != null ? 255 : 50);
 
         return convertView;
     }

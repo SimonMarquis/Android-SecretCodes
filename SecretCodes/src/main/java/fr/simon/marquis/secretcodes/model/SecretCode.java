@@ -15,12 +15,11 @@
  */
 package fr.simon.marquis.secretcodes.model;
 
+import android.content.ContentResolver;
+import android.net.Uri;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.graphics.drawable.Drawable;
 
 public class SecretCode implements Comparable<SecretCode> {
 
@@ -33,13 +32,14 @@ public class SecretCode implements Comparable<SecretCode> {
     private String mLabel;
     private String mPackageManager;
     private int mDrawableResource;
-    private Drawable mDrawable;
+    private Uri mIconUri;
 
     public SecretCode(String mCode, String mLabel, String mPackageManager, int mDrawableResource) {
         this.mCode = mCode;
         this.mLabel = mLabel;
         this.mPackageManager = mPackageManager;
         this.mDrawableResource = mDrawableResource;
+        buildIconUri();
     }
 
     public String getCode() {
@@ -64,14 +64,6 @@ public class SecretCode implements Comparable<SecretCode> {
 
     public void setDrawableResource(int resource) {
         this.mDrawableResource = resource;
-    }
-
-    public Drawable getDrawable() {
-        return mDrawable;
-    }
-
-    public void setDrawable(Drawable drawable) {
-        this.mDrawable = drawable;
     }
 
     public String getPackageManager() {
@@ -115,11 +107,6 @@ public class SecretCode implements Comparable<SecretCode> {
         return length1 - length2;
     }
 
-    // TODO
-    public static SecretCode fromResolveInfo(String code, ResolveInfo resolveInfo, PackageManager pm) {
-        return new SecretCode(code, String.valueOf(resolveInfo.loadLabel(pm)), resolveInfo.activityInfo.packageName, resolveInfo.getIconResource());
-    }
-
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -146,4 +133,19 @@ public class SecretCode implements Comparable<SecretCode> {
     }
 
 
+    public Uri getIconUri() {
+        return mIconUri;
+    }
+
+    private void buildIconUri() {
+        if (this.mDrawableResource == 0) {
+            mIconUri = null;
+        } else {
+            Uri.Builder builder = new Uri.Builder();
+            builder.scheme(ContentResolver.SCHEME_ANDROID_RESOURCE);
+            builder.authority(this.mPackageManager);
+            builder.appendPath(Integer.toString(this.mDrawableResource));
+            mIconUri = builder.build();
+        }
+    }
 }
