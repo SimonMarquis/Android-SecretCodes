@@ -1,15 +1,10 @@
 ![Android-SecretCodes](https://raw.github.com/SimonMarquis/Android-SecretCodes/master/Resources/Feature%20graphic%20-%20resized.png "Android-SecretCodes") 
 ####Secret Codes is an Open Source application that allows you to browse through hidden codes of your Android phone.
 
-This application will scan through all available secret codes on your device.
-
+This application will scan through all available secret codes on your device.  
 Then you will be able to executes these secret codes a discover hidden functionalities.
 
-Beta testing
-------------
-If you want to opt-in to the Beta program, you need to join this **[Google+ Community](https://plus.google.com/u/0/communities/104838094113791045302)**.
-
-Test it, have fun, and please submit any feedback you have!
+[![Android-SecretCodes on Google Play Store](http://developer.android.com/images/brand/en_generic_rgb_wo_60.png)](https://play.google.com/store/apps/details?id=fr.simon.marquis.secretcodes)
 
 Screenshots
 -----------
@@ -25,8 +20,7 @@ Video
 What is a secret code?
 ----------------------
 
-In Android a secret code is defined by this pattern: `*#*#<code>#*#*`.
-
+In Android a secret code is defined by this pattern: `*#*#<code>#*#*`.  
 If such a secret code is executed, the system will trigger this method: (taken form the AOSP Android Open Source Project)
 ```java
 static private boolean handleSecretCode(Context context, String input) {
@@ -69,7 +63,7 @@ sendBroadcast(intent);
 How to create your own secret code?
 -----------------------------------
 
-Add these lines in your AndroidManifest.xml
+Add these lines in your AndroidManifest.xml  
 And whenever `*#*#123456789#*#*` is submitted, your receiver will be notified.
 ```xml
 <receiver android:name=".MySecretCodeReceiver">
@@ -82,10 +76,8 @@ And whenever `*#*#123456789#*#*` is submitted, your receiver will be notified.
 
 Pull requests
 -------------
-Feel free to contribute to PreferencesManager.
-
-Either you found a bug or have created a new and awesome feature, just create a pull request.
-
+Feel free to contribute to PreferencesManager.  
+Either you found a bug or have created a new and awesome feature, just create a pull request.  
 If you want to start to create a new feature or have any other questions regarding PreferencesManager, [file an issue](https://github.com/SimonMarquis/Android-SecretCodes/issues/new).
 
 Developed By
