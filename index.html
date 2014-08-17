@@ -5,21 +5,21 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
 
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <title>Android-secretcodes by SimonMarquis</title>
+    <title>Android Secret Codes by SimonMarquis</title>
   </head>
 
   <body>
     <header>
       <div class="inner">
-        <h1>Android-secretcodes</h1>
+        <h1>Android Secret Codes</h1>
         <h2>Secret Codes is an Open Source application that allows you to browse through hidden codes of your Android phone.</h2>
         <a href="https://github.com/SimonMarquis/Android-SecretCodes" class="button"><small>View project on</small>GitHub</a>
       </div>
@@ -33,16 +33,10 @@
 <h4>
 <a name="secret-codes-is-an-open-source-application-that-allows-you-to-browse-through-hidden-codes-of-your-android-phone" class="anchor" href="#secret-codes-is-an-open-source-application-that-allows-you-to-browse-through-hidden-codes-of-your-android-phone"><span class="octicon octicon-link"></span></a>Secret Codes is an Open Source application that allows you to browse through hidden codes of your Android phone.</h4>
 
-<p>This application will scan through all available secret codes on your device.</p>
+<p>This application will scan through all available secret codes on your device.<br>
+Then you will be able to executes these secret codes a discover hidden functionalities.</p>
 
-<p>Then you will be able to executes these secret codes a discover hidden functionalities.</p>
-
-<h2>
-<a name="beta-testing" class="anchor" href="#beta-testing"><span class="octicon octicon-link"></span></a>Beta testing</h2>
-
-<p>If you want to opt-in to the Beta program, you need to join this <strong><a href="https://plus.google.com/u/0/communities/104838094113791045302">Google+ Community</a></strong>.</p>
-
-<p>Test it, have fun, and please submit any feedback you have!</p>
+<p><a href="https://play.google.com/store/apps/details?id=fr.simon.marquis.secretcodes"><img src="http://developer.android.com/images/brand/en_generic_rgb_wo_60.png" alt="Android-SecretCodes on Google Play Store"></a></p>
 
 <h2>
 <a name="screenshots" class="anchor" href="#screenshots"><span class="octicon octicon-link"></span></a>Screenshots</h2>
@@ -50,16 +44,20 @@
 <p><img src="https://raw.github.com/SimonMarquis/Android-SecretCodes/master/Resources/framed/1%20-%20resized.png" alt="Screenshot" title="List of applications"><img src="https://raw.github.com/SimonMarquis/Android-SecretCodes/master/Resources/framed/2%20-%20resized.png" alt="Screenshot" title="List of preferences"><img src="https://raw.github.com/SimonMarquis/Android-SecretCodes/master/Resources/framed/3%20-%20resized.png" alt="Screenshot" title="Inline edition of preferences"></p>
 
 <h2>
+<a name="video" class="anchor" href="#video"><span class="octicon octicon-link"></span></a>Video</h2>
+
+<p><a href="http://www.youtube.com/watch?v=UKwyspMBW3g"><img src="http://img.youtube.com/vi/UKwyspMBW3g/0.jpg" alt="Youtube Video"></a></p>
+
+<h2>
 <a name="what-is-a-secret-code" class="anchor" href="#what-is-a-secret-code"><span class="octicon octicon-link"></span></a>What is a secret code?</h2>
 
-<p>In Android a secret code is defined by this pattern: <code>*#*#&lt;code&gt;#*#*</code>.</p>
-
-<p>If such a secret code is executed, the system will trigger this method: (taken form the AOSP Android Open Source Project)</p>
+<p>In Android a secret code is defined by this pattern: <code>*#*#&lt;code&gt;#*#*</code>.<br>
+If such a secret code is executed, the system will trigger this method: (taken form the AOSP Android Open Source Project)</p>
 
 <div class="highlight highlight-java"><pre><span class="kd">static</span> <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">handleSecretCode</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">,</span> <span class="n">String</span> <span class="n">input</span><span class="o">)</span> <span class="o">{</span>
     <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">input</span><span class="o">.</span><span class="na">length</span><span class="o">();</span>
     <span class="k">if</span> <span class="o">(</span><span class="n">len</span> <span class="o">&gt;</span> <span class="mi">8</span> <span class="o">&amp;&amp;</span> <span class="n">input</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">"*#*#"</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="n">input</span><span class="o">.</span><span class="na">endsWith</span><span class="o">(</span><span class="s">"#*#*"</span><span class="o">))</span> <span class="o">{</span>
-        <span class="n">Intent</span> <span class="n">intent</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Intent</span><span class="o">(</span><span class="n">TelephonyIntents</span><span class="o">.</span><span class="na">SECRET_CODE_ACTION</span><span class="o">,</span>
+        <span class="n">Intent</span> <span class="n">intent</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Intent</span><span class="o">(</span><span class="n">TelephonyIntents</span><span class="o">.</span><span class="na">SECRET_CODE_ACTION</span><span class="o">,</span>
                 <span class="n">Uri</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="s">"android_secret_code://"</span> <span class="o">+</span> <span class="n">input</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">4</span><span class="o">,</span> <span class="n">len</span> <span class="o">-</span> <span class="mi">4</span><span class="o">)));</span>
         <span class="n">context</span><span class="o">.</span><span class="na">sendBroadcast</span><span class="o">(</span><span class="n">intent</span><span class="o">);</span>
         <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
@@ -79,7 +77,7 @@
 <p>Simply write the secret code like: <code>*#*#123456789#*#*</code>.</p>
 
 <hr><div class="highlight highlight-java"><pre><span class="n">String</span> <span class="n">secretCode</span> <span class="o">=</span> <span class="s">"123456789"</span><span class="o">;</span>
-<span class="n">Intent</span> <span class="n">intent</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Intent</span><span class="o">(</span><span class="n">Intent</span><span class="o">.</span><span class="na">ACTION_DIAL</span><span class="o">);</span>    
+<span class="n">Intent</span> <span class="n">intent</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Intent</span><span class="o">(</span><span class="n">Intent</span><span class="o">.</span><span class="na">ACTION_DIAL</span><span class="o">);</span>    
 <span class="n">intent</span><span class="o">.</span><span class="na">setData</span><span class="o">(</span><span class="n">Uri</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="s">"tel:*#*#"</span> <span class="o">+</span> <span class="n">secretCode</span> <span class="o">+</span> <span class="s">"#*#*"</span><span class="o">));</span>
 <span class="n">startActivity</span><span class="o">(</span><span class="n">intent</span><span class="o">);</span>
 </pre></div>
@@ -87,14 +85,14 @@
 <hr><div class="highlight highlight-java"><pre><span class="n">String</span> <span class="n">secretCode</span> <span class="o">=</span> <span class="s">"123456789"</span><span class="o">;</span>
 <span class="n">String</span> <span class="n">action</span> <span class="o">=</span> <span class="s">"android.provider.Telephony.SECRET_CODE"</span><span class="o">;</span>
 <span class="n">Uri</span> <span class="n">uri</span> <span class="o">=</span> <span class="n">Uri</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="s">"android_secret_code://"</span> <span class="o">+</span> <span class="n">secretCode</span><span class="o">);</span>
-<span class="n">Intent</span> <span class="n">intent</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Intent</span><span class="o">(</span><span class="n">action</span><span class="o">,</span> <span class="n">uri</span><span class="o">);</span>
+<span class="n">Intent</span> <span class="n">intent</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Intent</span><span class="o">(</span><span class="n">action</span><span class="o">,</span> <span class="n">uri</span><span class="o">);</span>
 <span class="n">sendBroadcast</span><span class="o">(</span><span class="n">intent</span><span class="o">);</span>
 </pre></div>
 
 <h2>
 <a name="how-to-create-your-own-secret-code" class="anchor" href="#how-to-create-your-own-secret-code"><span class="octicon octicon-link"></span></a>How to create your own secret code?</h2>
 
-<p>Add these lines in your AndroidManifest.xml
+<p>Add these lines in your AndroidManifest.xml<br>
 And whenever <code>*#*#123456789#*#*</code> is submitted, your receiver will be notified.</p>
 
 <div class="highlight highlight-xml"><pre><span class="nt">&lt;receiver</span> <span class="na">android:name=</span><span class="s">".MySecretCodeReceiver"</span><span class="nt">&gt;</span>
@@ -108,11 +106,9 @@ And whenever <code>*#*#123456789#*#*</code> is submitted, your receiver will be 
 <h2>
 <a name="pull-requests" class="anchor" href="#pull-requests"><span class="octicon octicon-link"></span></a>Pull requests</h2>
 
-<p>Feel free to contribute to PreferencesManager.</p>
-
-<p>Either you found a bug or have created a new and awesome feature, just create a pull request.</p>
-
-<p>If you want to start to create a new feature or have any other questions regarding PreferencesManager, <a href="https://github.com/SimonMarquis/Android-SecretCodes/issues/new">file an issue</a>.</p>
+<p>Feel free to contribute to PreferencesManager.<br>
+Either you found a bug or have created a new and awesome feature, just create a pull request.<br>
+If you want to start to create a new feature or have any other questions regarding PreferencesManager, <a href="https://github.com/SimonMarquis/Android-SecretCodes/issues/new">file an issue</a>.</p>
 
 <h2>
 <a name="developed-by" class="anchor" href="#developed-by"><span class="octicon octicon-link"></span></a>Developed By</h2>
@@ -150,7 +146,7 @@ the License.
 
           <p class="repo-owner"><a href="https://github.com/SimonMarquis/Android-SecretCodes"></a> is maintained by <a href="https://github.com/SimonMarquis">SimonMarquis</a>.</p>
 
-          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
         </aside>
       </div>
     </div>
