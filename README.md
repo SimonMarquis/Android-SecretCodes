@@ -76,9 +76,9 @@ And whenever `*#*#123456789#*#*` is submitted, your receiver will be notified.
 
 Pull requests
 -------------
-Feel free to contribute to PreferencesManager.  
+Feel free to contribute to Android-SecretCodes.  
 Either you found a bug or have created a new and awesome feature, just create a pull request.  
-If you want to start to create a new feature or have any other questions regarding PreferencesManager, [file an issue](https://github.com/SimonMarquis/Android-SecretCodes/issues/new).
+If you want to start to create a new feature or have any other questions regarding Android-SecretCodes, [file an issue](https://github.com/SimonMarquis/Android-SecretCodes/issues/new).
 
 Developed By
 ------------
