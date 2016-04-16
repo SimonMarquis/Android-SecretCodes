@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+     Copyright (C) 2013 Simon Marquis (http://www.simon-marquis.fr)
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+
+-->
+<resources>
+
+    <string name="about_body"><![CDATA[
+        Secret Codes est une application Open Source qui permet de scanner tous les codes secrets disponibles sur votre smartphone Android. Si vous souhaitez plus d\'informations, visitez ces liens :<br><br>
+        <b>&bull;&nbsp;&nbsp;<a href="https://plus.google.com/u/0/communities/104838094113791045302">Communauté Google+</a></b> <i>Partagez vos bugs, vos améliorations, …</i><br>
+        <b>&bull;&nbsp;&nbsp;<a href="http://simonmarquis.github.io/Android-SecretCodes/">Page Github</a></b> <i>Description du projet</i><br>
+        <b>&bull;&nbsp;&nbsp;<a href="https://github.com/SimonMarquis/Android-SecretCodes">Repository Github</a></b> <i>Code source du projet</i><br>
+        <b>&bull;&nbsp;&nbsp;<a href="http://www.simon-marquis.fr">Mon site internet</a></b> <i>A propos de moi, et de mes autres projets</i>
+    ]]></string>
+
+    <string name="action_about">A propos</string>
+    <string name="action_close">Fermer</string>
+
+    <string name="execute_code">Exécution du code *#*#%1$s#*#*</string>
+
+    <string name="action_start">Démarrer le processus de recherche</string>
+    <string name="action_online_database">Base de données</string>
+
+    <string name="zero_secret_codes">Aucun code secret n\'a été trouvé…</string>
+    <string name="security_exception">Votre appareil n\'est pas compatible…\nComposez le code depuis l\'application téléphone.</string>
+</resources>

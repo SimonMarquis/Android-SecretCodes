@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+     Copyright (C) 2013 Simon Marquis (http://www.simon-marquis.fr)
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+
+-->
+<resources>
+
+    <string name="about_body"><![CDATA[
+        Secret Codes es una aplicación Open Source que te permite buscar los códigos secretos disponibles para tu dispositivo Android device usando la aplicación del llamadas. Si quiere más información sobre esto, vea los siguientes links:<br><br>
+        <b>&bull;&nbsp;&nbsp;<a href="https://plus.google.com/u/0/communities/104838094113791045302">Google+ Community</a></b> <i>Comparte tus peticiones de mejoras, fallos, …</i><br>
+        <b>&bull;&nbsp;&nbsp;<a href="http://simonmarquis.github.io/Android-SecretCodes/">Github Pages</a></b> <i>Descripción del proyecto</i><br>
+        <b>&bull;&nbsp;&nbsp;<a href="https://github.com/SimonMarquis/Android-SecretCodes">Github repository</a></b> <i>Códifo fuente del proyecto</i><br>
+        <b>&bull;&nbsp;&nbsp;<a href="http://www.simon-marquis.fr">My personal website</a></b> <i>Sobre mi, y otros proyectos</i>
+    ]]></string>
+
+    <string name="action_about">Acerca de</string>
+    <string name="action_close">Cerrar</string>
+
+    <string name="execute_code">Ejecutando el código *#*#%1$s#*#*</string>
+
+    <string name="action_start">Iniciar el proceso de busqueda</string>
+    <string name="action_online_database">Base de datos Online</string>
+
+    <string name="zero_secret_codes">No existen códigos secretos en su dispositivo…</string>
+    <string name="security_exception">Su dispositivo no es compatible…\nIntente ejecutar el código directamente en la aplicación del llamadas.</string>
+</resources>

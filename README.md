@@ -4,18 +4,17 @@
 This application will scan through all available secret codes on your device.  
 Then you will be able to executes these secret codes a discover hidden functionalities.
 
-[![Android-SecretCodes on Google Play Store](http://developer.android.com/images/brand/en_generic_rgb_wo_60.png)](https://play.google.com/store/apps/details?id=fr.simon.marquis.secretcodes)
+[![Android-SecretCodes on Google Play Store](Resources/en-play-badge-border.png)](https://play.google.com/store/apps/details?id=fr.simon.marquis.secretcodes)
 
 Screenshots
 -----------
 ![Screenshot][screen1]
 ![Screenshot][screen2]
-![Screenshot][screen3]
 
 Video
 -----
 
-[![Youtube Video](http://img.youtube.com/vi/UKwyspMBW3g/0.jpg)](http://www.youtube.com/watch?v=UKwyspMBW3g)
+[![Youtube Video](http://img.youtube.com/vi/GH1NrV7EqI8/0.jpg)](http://www.youtube.com/watch?v=GH1NrV7EqI8)
 
 What is a secret code?
 ----------------------
@@ -87,7 +86,7 @@ Developed By
 License
 -------
 
-	Copyright (C) 2013 Simon Marquis (http://www.simon-marquis.fr)
+	Copyright (C) 2016 Simon Marquis (http://www.simon-marquis.fr)
 	
 	Licensed under the Apache License, Version 2.0 (the "License"); you may not
 	use this file except in compliance with the License. You may obtain a copy of
@@ -104,7 +103,6 @@ License
 
  [1]: http://www.simon-marquis.fr
  
- [screen1]: https://raw.github.com/SimonMarquis/Android-SecretCodes/master/Resources/framed/1%20-%20resized.png "List of applications"
- [screen2]: https://raw.github.com/SimonMarquis/Android-SecretCodes/master/Resources/framed/2%20-%20resized.png "List of preferences"
- [screen3]: https://raw.github.com/SimonMarquis/Android-SecretCodes/master/Resources/framed/3%20-%20resized.png "Inline edition of preferences"
+ [screen1]: Resources/nexus5x-resized.png "List of codes"
+ [screen2]: Resources/nexus5x-2-resized.png "List of codes"
  

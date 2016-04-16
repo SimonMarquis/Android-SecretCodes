@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+     Copyright (C) 2013 Simon Marquis (http://www.simon-marquis.fr)
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+
+-->
+<resources>
+
+    <string name="app_name" translatable="false">Secret Codes</string>
+    <string name="app_name_and_version" translatable="false"><![CDATA[
+    <b>Secret Codes</b>&nbsp;<font color="#888888">v%1$s</font>
+    ]]></string>
+    <string name="about_body"><![CDATA[
+        Secret Codes is an Open Source application that allows you to scan the secret codes available on your Android device through the dialer app. If you want more info about it, follow these links:<br><br>
+        <b>&bull;&nbsp;&nbsp;<a href="https://plus.google.com/u/0/communities/104838094113791045302">Google+ Community</a></b> <i>Share your features requests, bugs, …</i><br>
+        <b>&bull;&nbsp;&nbsp;<a href="http://simonmarquis.github.io/Android-SecretCodes/">Github Pages</a></b> <i>Description of the project</i><br>
+        <b>&bull;&nbsp;&nbsp;<a href="https://github.com/SimonMarquis/Android-SecretCodes">Github repository</a></b> <i>Source code of the project</i><br>
+        <b>&bull;&nbsp;&nbsp;<a href="http://www.simon-marquis.fr">My personal website</a></b> <i>About me, and other projects</i>
+    ]]></string>
+    <string name="online_database_url" translatable="false">https://github.com/SimonMarquis/Android-SecretCodes/blob/master/Database/SecretCodes.md</string>
+
+    <string name="action_about">About</string>
+    <string name="action_close">Close</string>
+
+    <string name="execute_code">Invoking *#*#%1$s#*#* secret code…</string>
+
+    <string name="action_start">Start the scan process</string>
+    <string name="action_online_database">Online Database</string>
+
+    <string name="zero_secret_codes">There is no secret code on your device…</string>
+    <string name="security_exception">Your device isn\'t compatible…\nTry to execute the code directly from the dialer app.</string>
+</resources>
