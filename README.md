@@ -4,7 +4,8 @@
 This application will scan through all available secret codes on your device.  
 Then you will be able to executes these secret codes a discover hidden functionalities.
 
-[![Android-SecretCodes on Google Play Store](Resources/en-play-badge-border.png)](https://play.google.com/store/apps/details?id=fr.simon.marquis.secretcodes)
+[![Android-SecretCodes on Google Play Store](Resources/en-play-badge-border.png)](https://play.google.com/store/apps/details?id=fr.simon.marquis.secretcodes)  
+[![Android-SecretCodes on F-Droid](Resources/fdroid.png)](https://f-droid.org/repository/browse/?fdid=fr.simon.marquis.secretcodes)
 
 Screenshots
 -----------
