@@ -6,9 +6,9 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.XmlResourceParser;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -122,6 +122,21 @@ final class Crawler {
                                         secretCodes.add(new SecretCode(c, icon, label));
                                     }
                                 }
+                                /*
+                                TODO: Some application has the following secret code definition that cannot be detected. Need to be fixed.
+                                <receiver
+                                        android:name=".receiver.SecretCallReceiver"
+                                        android:enabled="true"
+                                        android:exported="true">
+                                    <intent-filter>
+                                        <action android:name="android.provider.Telephony.SECRET_CODE" />
+                                        <data android:scheme="android_secret_code"/>
+                                        <data android:host="44671"/>
+                                        <data android:host="44672"/>
+                                        <data android:host="44673"/>
+                                    </intent-filter>
+                                </receiver>
+                                */
                                 break;
                         }
                     }

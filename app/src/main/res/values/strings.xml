@@ -39,4 +39,5 @@
 
     <string name="zero_secret_codes">There is no secret code on your device…</string>
     <string name="security_exception">Your device isn\'t compatible…\nTry to execute the code directly from the dialer app.</string>
+    <string name="code_manual_confirm">Paste the code in the dailer to launch</string>
 </resources>

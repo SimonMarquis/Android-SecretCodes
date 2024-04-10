@@ -3,24 +3,29 @@ package fr.simon.marquis.secretcodes;
 import android.animation.Keyframe;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+
+import static android.content.Intent.ACTION_CALL_BUTTON;
+import static android.content.Intent.ACTION_DIAL;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<SecretCode>>, SecretCodeAdapter.ItemClickListener {
 
@@ -61,15 +66,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_about:
-                showAboutDialog();
-                break;
-            case R.id.action_online_database:
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.online_database_url))));
-                break;
-            default:
-                break;
+        if (item.getItemId() == R.id.action_about) {
+            showAboutDialog();
+        } else if (item.getItemId() == R.id.action_online_database) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.online_database_url))));
         }
         return super.onOptionsItemSelected(item);
     }
@@ -102,9 +102,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void itemClicked(SecretCode code) {
-        Toast.makeText(MainActivity.this, getString(R.string.execute_code, code.getCode()), Toast.LENGTH_SHORT).show();
         try {
-            sendBroadcast(new Intent("android.provider.Telephony.SECRET_CODE", Uri.parse("android_secret_code://" + code.getCode())));
+            ClipboardManager cb = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+            cb.setPrimaryClip(ClipData.newPlainText(code.getLabel(),"*#*#"+code.getCode()+"#*#*"));
+
+            Toast.makeText(MainActivity.this, R.string.code_manual_confirm, Toast.LENGTH_SHORT).show();
+            Intent Intent =  new Intent(ACTION_CALL_BUTTON);
+            startActivity(Intent);
         } catch (SecurityException se) {
             Toast.makeText(MainActivity.this, R.string.security_exception, Toast.LENGTH_LONG).show();
         }
